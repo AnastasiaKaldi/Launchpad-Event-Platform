@@ -73,11 +73,26 @@ function Navbar() {
                 Support
               </a>
             </li>
-            <Link to="/signin">
-              <button className="rounded-md border-2 border-[#FFE9C1] px-6 py-1 font-medium text-[#FFE9C1] transition-colors hover:bg-text-[#FFE9C1] hover:text-[#a79066]">
-                Log in
-              </button>
-            </Link>
+            <li className="md:mr-4">
+              <Link to="/signin">
+                <button
+                  className="rounded-md border-2 border-[#FFE9C1] px-6 py-1 font-medium text-[#FFE9C1] transition-colors hover:bg-[#FFE9C1] hover:text-[#a79066]"
+                  style={{ fontFamily: "Inknut Antiqua" }}
+                >
+                  Log in
+                </button>
+              </Link>
+            </li>
+            <li className="md:mr-8">
+              <Link to="/signin">
+                <button
+                  className="rounded-md border-2 border-[#FFE9C1] px-6 py-1 font-medium text-[#FFE9C1] transition-colors hover:bg-[#FFE9C1] hover:text-[#a79066]"
+                  style={{ fontFamily: "Inknut Antiqua" }}
+                >
+                  Log in as an organiser
+                </button>
+              </Link>
+            </li>
           </ul>
         </nav>
       </div>

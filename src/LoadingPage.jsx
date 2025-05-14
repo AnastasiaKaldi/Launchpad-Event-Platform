@@ -3,6 +3,7 @@ import React from "react";
 import Homepage from "./Homepage";
 import EventsPage from "./EventsPage";
 import CreateEvent from "../src/Createevent";
+import Footer from "./Footer";
 
 const LandingPage = () => {
   return (
@@ -10,6 +11,7 @@ const LandingPage = () => {
       <Homepage />
       <EventsPage />
       <CreateEvent />
+      <Footer />
     </div>
   );
 };
