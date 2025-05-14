@@ -27,7 +27,7 @@ function Checkout() {
                   id="email"
                   name="email"
                   placeholder="john.capler@fang.com"
-                  class="mt-1 block w-full rounded border-gray-300 bg-gray-50 py-3 px-4 text-sm placeholder-gray-300 shadow-sm outline-none transition focus:ring-2 focus:ring-teal-500"
+                  class="mt-1 block w-full rounded border-gray-300 bg-gray-50 py-3 text-black px-4 text-sm placeholder-black shadow-sm outline-none transition focus:ring-2 focus:ring-teal-500"
                 />
               </div>
               <div class="relative">
@@ -43,7 +43,7 @@ function Checkout() {
                   id="card-number"
                   name="card-number"
                   placeholder="1234-5678-XXXX-XXXX"
-                  class="block w-full rounded border-gray-300 bg-gray-50 py-3 px-4 pr-10 text-sm placeholder-gray-300 shadow-sm outline-none transition focus:ring-2 focus:ring-teal-500"
+                  class="block w-full rounded border-gray-300 text-black bg-gray-50 py-3 px-4 pr-10 text-sm placeholder-black shadow-sm outline-none transition focus:ring-2 focus:ring-teal-500"
                 />
                 <img
                   src="/images/uQUFIfCYVYcLK0qVJF5Yw.png"
@@ -66,9 +66,19 @@ function Checkout() {
                     <select
                       name="month"
                       id="month"
-                      class="cursor-pointer rounded border-gray-300 bg-gray-50 py-3 px-2 text-sm shadow-sm outline-none transition focus:ring-2 focus:ring-teal-500"
+                      class="cursor-pointer rounded border-gray-300 text-black bg-gray-50 py-3 px-2 text-sm shadow-sm outline-none transition focus:ring-2 focus:ring-teal-500"
                     >
                       <option value="">Month</option>
+                      {[...Array(12)].map((_, index) => {
+                        const month = index + 1;
+                        const paddedMonth =
+                          month < 10 ? `0${month}` : `${month}`;
+                        return (
+                          <option key={month} value={paddedMonth}>
+                            {paddedMonth}
+                          </option>
+                        );
+                      })}
                     </select>
                   </div>
                   <div class="my-1 ml-3 mr-6">
@@ -78,9 +88,17 @@ function Checkout() {
                     <select
                       name="year"
                       id="year"
-                      class="cursor-pointer rounded border-gray-300 bg-gray-50 py-3 px-2 text-sm shadow-sm outline-none transition focus:ring-2 focus:ring-teal-500"
+                      class="cursor-pointer rounded border-gray-300 text-black bg-gray-50 py-3 px-2 text-sm shadow-sm outline-none transition focus:ring-2 focus:ring-teal-500"
                     >
                       <option value="">Year</option>
+                      {[...Array(11)].map((_, index) => {
+                        const year = 2025 + index;
+                        return (
+                          <option key={year} value={year}>
+                            {year}
+                          </option>
+                        );
+                      })}
                     </select>
                   </div>
                   <div class="relative my-1">
@@ -92,13 +110,13 @@ function Checkout() {
                       id="security-code"
                       name="security-code"
                       placeholder="Security code"
-                      class="block w-36 rounded border-gray-300 bg-gray-50 py-3 px-4 text-sm placeholder-black shadow-sm outline-none transition focus:ring-2 focus:ring-teal-500"
+                      class="block w-36 rounded border-gray-300  text-black bg-gray-50 py-3 px-4 text-sm placeholder-black shadow-sm outline-none transition focus:ring-2 focus:ring-teal-500"
                     />
                   </div>
                 </div>
               </div>
               <div>
-                <label for="card-name" class="sr-only placeholder-black">
+                <label for="card-name" class="sr-only ">
                   Card name
                 </label>
                 <input
@@ -106,7 +124,7 @@ function Checkout() {
                   id="card-name"
                   name="card-name"
                   placeholder="Name on the card"
-                  class="mt-1 block w-full rounded border-gray-300 bg-gray-50 py-3 px-4 text-sm placeholder-gray-300 shadow-sm outline-none transition focus:ring-2 focus:ring-teal-500"
+                  class="mt-1 block w-full rounded border-gray-300 text-black placeholder-black bg-gray-50 py-3 px-4 text-sm  shadow-sm outline-none transition focus:ring-2 focus:ring-teal-500"
                 />
               </div>
             </form>
@@ -139,69 +157,78 @@ function Checkout() {
               alt=""
               class="absolute inset-0 h-full w-full object-cover"
             />
-            <div class="absolute inset-0 h-full w-full bg-gradient-to-t from-gray-800 to-gray-400 opacity-70"></div>
+            <div class="absolute inset-0 h-full w-full bg-gradient-to-t from-red-500 to-red-300 opacity-60"></div>
           </div>
           <div class="relative">
             <ul class="space-y-5">
               <li class="flex justify-between">
                 <div class="inline-flex">
-                  <img src={checkout} alt="" class="max-h-16" />
-                  <div class="ml-3">
-                    <p class="text-base font-semibold text-white">
+                  <div class="ml-3" style={{ fontFamily: "Inknut Antiqua" }}>
+                    <p class="text-lg font-semibold text-[#FBE7B2]">
                       Nano Titanium Hair Dryer
                     </p>
-                    <p class="text-sm font-medium text-white text-opacity-80">
+                    <p class="text-md font-medium text-[#FBE7B2] text-opacity-80">
                       Pdf, doc Kindle
                     </p>
                   </div>
                 </div>
-                <p class="text-sm font-semibold text-white">$260.00</p>
+                <p
+                  class="text-lg font-semibold text-[#FBE7B2]"
+                  style={{ fontFamily: "Inknut Antiqua" }}
+                >
+                  $260.00
+                </p>
               </li>
               <li class="flex justify-between">
                 <div class="inline-flex">
-                  <img src={checkout} alt="" class="max-h-16" />
-                  <div class="ml-3">
-                    <p class="text-base font-semibold text-white">Luisia H35</p>
-                    <p class="text-sm font-medium text-white text-opacity-80">
+                  <div class="ml-3" style={{ fontFamily: "Inknut Antiqua" }}>
+                    <p class="font-semibold text-lg text-[#FBE7B2]">
+                      Luisia H35
+                    </p>
+                    <p class="text-md font-medium text-[#FBE7B2] text-opacity-80">
                       Hair Dryer
                     </p>
                   </div>
                 </div>
-                <p class="text-sm font-semibold text-white">$350.00</p>
+                <p
+                  class="text-lg font-semibold text-[#FBE7B2]"
+                  style={{ fontFamily: "Inknut Antiqua" }}
+                >
+                  $350.00
+                </p>
               </li>
             </ul>
-            <div class="my-5 h-0.5 w-full bg-white bg-opacity-30"></div>
+            <div class="my-5 h-0.5 w-full bg-[#FBE7B2] bg-opacity-30"></div>
             <div class="space-y-2">
-              <p class="flex justify-between text-lg font-bold text-white">
+              <p
+                class="flex justify-between text-lg font-bold text-[#FBE7B2]"
+                style={{ fontFamily: "Inknut Antiqua" }}
+              >
                 <span>Total price:</span>
-                <span>$510.00</span>
+                <span style={{ fontFamily: "Inknut Antiqua" }}> $510.00</span>
               </p>
-              <p class="flex justify-between text-sm font-medium text-white">
+              <p
+                class="flex justify-between text-md font-medium text-[#FBE7B2]"
+                style={{ fontFamily: "Inknut Antiqua" }}
+              >
                 <span>Vat: 10%</span>
                 <span>$55.00</span>
               </p>
             </div>
           </div>
-          <div class="relative mt-10 text-white">
-            <h3 class="mb-5 text-lg font-bold">Support</h3>
-            <p class="text-sm font-semibold">
+          <div
+            class="relative mt-10 text-[#FBE7B2]"
+            style={{ fontFamily: "Inknut Antiqua" }}
+          >
+            <h3 class="mb-5 text-2xl font-bold">Support</h3>
+            <p class="text-md font-semibold">
               +01 653 235 211 <span class="font-light">(International)</span>
             </p>
-            <p class="mt-1 text-sm font-semibold">
+            <p class="mt-1 text-md font-semibold">
               support@nanohair.com <span class="font-light">(Email)</span>
             </p>
-            <p class="mt-2 text-xs font-medium">
+            <p class="mt-2 text-sm font-medium">
               Call us now for payment related issues
-            </p>
-          </div>
-          <div class="relative mt-10 flex">
-            <p class="flex flex-col">
-              <span class="text-sm font-bold text-white">
-                Money Back Guarantee
-              </span>
-              <span class="text-xs font-medium text-white">
-                within 30 days of purchase
-              </span>
             </p>
           </div>
         </div>
