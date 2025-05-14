@@ -1,10 +1,17 @@
-import "./App.css";
-import "./index.css";
+import { Outlet, useLocation } from "react-router-dom";
+import Navbar from "./Navbar";
 
 function App() {
+  const location = useLocation();
+
+  // Define routes where navbar should be hidden
+  const noNavbarRoutes = ["/signin", "/signup", "/checkout"];
+  const hideNavbar = noNavbarRoutes.includes(location.pathname);
+
   return (
-    <div className="w-screen h-screen bg-purple-500">
-      {/* Your content can go here */}
+    <div className="min-h-screen w-screen overflow-x-hidden bg-[#ffe6b3]">
+      {!hideNavbar && <Navbar />}
+      <Outlet />
     </div>
   );
 }
