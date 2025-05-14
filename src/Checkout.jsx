@@ -142,7 +142,7 @@ function Checkout() {
             </p>
             <button
               type="submit"
-              class="mt-4 inline-flex w-full items-center justify-center rounded bg-[#620808] py-2.5 px-4 text-base font-semibold tracking-wide text-white text-opacity-80 outline-none ring-offset-2 transition hover:text-opacity-100 focus:ring-2 focus:ring-teal-500 sm:text-lg"
+              class="mt-4 inline-flex w-full items-center justify-center rounded bg-[#620808] py-2.5 px-4 text-base font-semibold tracking-wide text-[#f5e5ba] text-opacity-80 outline-none ring-offset-2 transition hover:text-opacity-100 focus:ring-2 focus:ring-teal-500 sm:text-lg"
               style={{ fontFamily: "Inknut Antiqua" }}
             >
               Place Order
