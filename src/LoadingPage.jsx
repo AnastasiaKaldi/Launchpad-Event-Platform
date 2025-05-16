@@ -7,7 +7,7 @@ import Footer from "./Footer";
 
 const LandingPage = () => {
   return (
-    <div className="overflow-x-hidden bg-[#FBE7B2]">
+    <div className="overflow-x-hidden bg-[#dbd5c5]">
       <Homepage />
       <EventsPage />
       <CreateEvent />

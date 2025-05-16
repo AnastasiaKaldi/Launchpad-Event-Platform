@@ -9,7 +9,7 @@ function App() {
   const hideNavbar = noNavbarRoutes.includes(location.pathname);
 
   return (
-    <div className="min-h-screen w-screen overflow-x-hidden bg-[#ffe6b3]">
+    <div className="min-h-screen w-screen overflow-x-hidden bg-[#dbd5c5]">
       {!hideNavbar && <Navbar />}
       <Outlet />
     </div>

@@ -4,17 +4,17 @@ import { Link } from "react-router-dom";
 
 function Navbar() {
   return (
-    <header className="shadow mb-2">
+    <header className="absolute top-0 left-0 w-full z-50">
       <div
-        className="relative flex w-full flex-col overflow-hidden px-4 py-4 md:flex-row md:items-center"
-        style={{ backgroundColor: "#620808" }}
+        className="relative flex w-full flex-col overflow-hidden px-4 py-2 md:flex-row md:items-center"
+        style={{ backgroundColor: "rgba(98, 8, 8, 0.6)" }} // semi-transparent
       >
         <a
           href="#"
           className="flex items-center whitespace-nowrap text-4xl font-black ml-8"
         >
           <span
-            className="text-[#FFE9C1]"
+            className="text-[#dbd5c5]"
             style={{ fontFamily: "Inknut Antiqua" }}
           >
             the future
@@ -28,7 +28,7 @@ function Navbar() {
           <span className="sr-only">Toggle Navigation</span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6"
+            className="h-6 w-6 text-[#dbd5c5]"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -48,25 +48,25 @@ function Navbar() {
           <ul className="flex flex-col items-center space-y-2 md:ml-auto md:flex-row md:space-y-0">
             <li className="md:mr-12">
               <a
-                className="text-[#FFE9C1] hover:text-[#a79066]"
+                className="text-[#dbd5c5] hover:text-[#a79066]"
                 style={{ fontFamily: "Inknut Antiqua" }}
                 href="#"
               >
                 Pricing
               </a>
             </li>
-            <li className="md:mr-12 ">
+            <li className="md:mr-12">
               <a
-                className="text-[#FFE9C1] hover:text-[#a79066]"
+                className="text-[#dbd5c5] hover:text-[#a79066]"
                 style={{ fontFamily: "Inknut Antiqua" }}
                 href="#"
               >
                 Features
               </a>
             </li>
-            <li className="md:mr-12 ">
+            <li className="md:mr-12">
               <a
-                className="text-[#FFE9C1] hover:text-[#a79066]"
+                className="text-[#dbd5c5] hover:text-[#a79066]"
                 style={{ fontFamily: "Inknut Antiqua" }}
                 href="#"
               >
@@ -76,20 +76,10 @@ function Navbar() {
             <li className="md:mr-4">
               <Link to="/signin">
                 <button
-                  className="rounded-md border-2 border-[#FFE9C1] px-6 py-1 font-medium text-[#FFE9C1] transition-colors hover:bg-[#FFE9C1] hover:text-[#a79066]"
+                  className="rounded-md border-2 border-[#dbd5c5] px-6 py-1 font-medium text-[#dbd5c5] transition-colors hover:bg-[#FFE9C1] hover:text-[#a79066]"
                   style={{ fontFamily: "Inknut Antiqua" }}
                 >
                   Log in
-                </button>
-              </Link>
-            </li>
-            <li className="md:mr-8">
-              <Link to="/signin">
-                <button
-                  className="rounded-md border-2 border-[#FFE9C1] px-6 py-1 font-medium text-[#FFE9C1] transition-colors hover:bg-[#FFE9C1] hover:text-[#a79066]"
-                  style={{ fontFamily: "Inknut Antiqua" }}
-                >
-                  Log in as an organiser
                 </button>
               </Link>
             </li>

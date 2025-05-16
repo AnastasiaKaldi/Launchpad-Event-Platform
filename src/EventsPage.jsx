@@ -2,11 +2,48 @@ import "./App.css";
 import "./index.css";
 import React from "react";
 import { Link } from "react-router-dom";
+import coorporation from "../src/assets/cooperation.png";
+import hobby from "../src/assets/hobby.png";
+import music from "../src/assets/musical-notes.png";
+import nightlife from "../src/assets/nightlife.png";
+import food from "../src/assets/ramen.png";
+import festival from "../src/assets/decoration.png";
+import familyEvent from "../src/assets/familyEvent.png";
+
+const filterOptions = [
+  { label: "Music", image: music },
+  { label: "Nightlife", image: nightlife },
+  { label: "Hobbies", image: hobby },
+  { label: "Business", image: coorporation },
+  { label: "Food & Drink", image: food },
+  { label: "Festivals", image: festival },
+  { label: "Family Events", image: familyEvent },
+];
 
 const EventsPage = () => {
   return (
-    <section className="bg-[#FBE7B2] py-6 sm:py-8 lg:py-12">
-      <div className="mx-auto max-w-screen-xl px-4 md:px-8">
+    <section className="bg-[#dbd5c5] py-6 sm:py-8 lg:py-12">
+      <div className="mx-auto max-w-[80%] px-4 md:px-8">
+        {/* Filter Bubble Row */}
+        <div className="mb-10 flex flex-wrap justify-center gap-4 md:gap-6">
+          {filterOptions.map((option, index) => (
+            <button
+              key={index}
+              className="flex flex-col items-center justify-center w-24 h-24 rounded-full border-2 border-[#dbd5c5] bg-[#dbd5c5] text-[#620808] hover:bg-[#620808] hover:text-[#dbd5c5] transition duration-200 shadow"
+              style={{ fontFamily: "Inknut Antiqua" }}
+            >
+              <img
+                src={option.image}
+                alt={option.label}
+                className="w-8 h-8 object-contain mb-1"
+              />
+              <span className="text-xs text-center leading-tight">
+                {option.label}
+              </span>
+            </button>
+          ))}
+        </div>
+        {/* Title and Description */}
         <div className="mb-10 md:mb-16">
           <h2
             className="mb-4 text-left text-5xl font-bold text-[#620808] md:mb-6"
@@ -23,7 +60,7 @@ const EventsPage = () => {
         </div>
 
         {/* Grid Container */}
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 xl:gap-12">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-12">
           {/* Repeat this article block 9 times with different content or images */}
 
           {[

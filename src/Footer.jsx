@@ -12,22 +12,26 @@ function Footer() {
       </div>
       <nav
         aria-label="Footer Navigation"
-        class="mx-auto mb-10 flex max-w-lg flex-col gap-10 text-center sm:flex-row sm:text-left"
+        class="mx-auto mb-10 flex max-w-lg text-lg flex-col gap-10 text-center sm:flex-row sm:text-left"
+        style={{ fontFamily: "Inknut Antiqua" }}
       >
-        <a href="#" class="font-medium text-[#620808]">
+        <a href="#" class="font-medium text-[#dbd5c5]">
           Demo
         </a>
-        <a href="#" class="font-medium text-[#620808]">
+        <a href="#" class="font-medium text-[#dbd5c5]">
           Support
         </a>
-        <a href="#" class="font-medium text-[#620808]">
+        <a href="#" class="font-medium text-[#dbd5c5]">
           Privacy Policy
         </a>
-        <a href="#" class="font-medium text-[#620808]">
+        <a href="#" class="font-medium text-[#dbd5c5]">
           Terms & Conditions
         </a>
       </nav>
-      <p class="py-10 text-center text-[#620808]">
+      <p
+        class="py-10 text-center text-lg text-[#dbd5c5]"
+        style={{ fontFamily: "Inknut Antiqua" }}
+      >
         © 2025 Anastasia Kaldi | All Rights Reserved
       </p>
     </footer>

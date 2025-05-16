@@ -83,7 +83,7 @@ function Event() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FBE7B2] text-white px-6 py-12 font-mono">
+    <div className="min-h-screen bg-[#dbd5c5] text-white px-6 py-12 font-mono">
       {/* Carousel */}
       <div className="relative max-w-screen-lg mx-auto mb-10 rounded-xl overflow-hidden">
         <Slider {...settings}>
