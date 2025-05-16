@@ -28,7 +28,7 @@ function CreateEvent() {
                 ),
               },
               {
-                title: "Graduations Sponsored",
+                title: "Graduations Sponsor",
                 icon: (
                   <path
                     strokeLinecap="round"
