@@ -1,7 +1,38 @@
 import signin from "../src/assets/SignIn.jpg";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 function SignIn() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleLogin = async (e) => {
+    e.preventDefault(); // prevent form reload
+
+    try {
+      const res = await fetch("http://localhost:5050/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        localStorage.setItem("token", data.token);
+        alert("Login successful");
+        // redirect or reload page if needed
+      } else {
+        alert(data.message || "Login failed");
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      alert("Server error");
+    }
+  };
+
   return (
     <div class="flex w-full flex-wrap">
       <div class="flex w-full flex-col md:w-1/2 lg:w-1/3 bg-[#BA7F7F]">
@@ -17,18 +48,18 @@ function SignIn() {
         </div>
         <div class="my-auto flex flex-col justify-center px-6 pt-8 sm:px-24 md:justify-start md:px-8 md:pt-0 lg:px-12">
           <p
-            class="text-center text-3xl font-bold text-[#FBE7B2]"
+            class="text-center text-3xl font-bold text-[#dbd5c5]"
             style={{ fontFamily: "Inknut Antiqua" }}
           >
             Welcome back
           </p>
           <p
-            class="mt-2 text-2xl text-center text-[#FBE7B2]"
+            class="mt-2 text-2xl text-center text-[#dbd5c5]"
             style={{ fontFamily: "Inknut Antiqua" }}
           >
             Login to access your account.
           </p>
-          <form class="flex flex-col pt-3 md:pt-8">
+          <form className="flex flex-col pt-3 md:pt-8" onSubmit={handleLogin}>
             <div class="flex flex-col pt-4">
               <div class="relative flex overflow-hidden rounded-lg border focus-within:border-transparent focus-within:ring-2 transition focus-within:ring-blue-600">
                 <span class="inline-flex items-center border-r border-gray-300 bg-white px-3 text-sm text-gray-500 shadow-sm">
@@ -45,7 +76,9 @@ function SignIn() {
                 <input
                   type="email"
                   id="login-email"
-                  class="w-full flex-1 appearance-none border-gray-300 bg-white py-2 px-4 text-base text-gray-700 placeholder-gray-400  focus:outline-none"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full flex-1 appearance-none border-gray-300 bg-[#BA7F7F] py-4 px-4 text-base text-[#dbd5c5] placeholder-[#dbd5c5] focus:outline-none"
                   placeholder="Email"
                 />
               </div>
@@ -66,17 +99,19 @@ function SignIn() {
                 <input
                   type="password"
                   id="login-password"
-                  class="w-full flex-1 appearance-none border-gray-300 bg-white py-2 px-4 text-base text-gray-700 placeholder-gray-400  focus:outline-none"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full flex-1 appearance-none border-gray-300 bg-[#BA7F7F] py-4 px-4 text-base text-[#dbd5c5] placeholder-[#dbd5c5] focus:outline-none"
                   placeholder="Password"
                 />
               </div>
             </div>
             <button
               type="submit"
-              class="w-full rounded-lg bg-[#620808] text-lg px-4 py-2 text-center  font-semibold text-[#FBE7B2] shadow-md transition ease-in hover:bg-blue-600 focus:outline-none focus:ring-2"
+              class="w-full rounded-lg bg-[#620808] text-lg px-4 py-2 text-center  font-semibold text-[#dbd5c5] shadow-md transition ease-in hover:bg-blue-600 focus:outline-none focus:ring-2"
             >
               <span
-                class="w-full text-[#FBE7B2]"
+                class="w-full text-[#dbd5c5]"
                 style={{ fontFamily: "Inknut Antiqua" }}
               >
                 {" "}
@@ -86,7 +121,7 @@ function SignIn() {
           </form>
           <div class="pt-12 pb-12 text-center">
             <p
-              class="whitespace-nowrap text-xl text-[#FBE7B2]"
+              class="whitespace-nowrap text-xl text-[#dbd5c5]"
               style={{ fontFamily: "Inknut Antiqua" }}
             >
               Don't have an account?

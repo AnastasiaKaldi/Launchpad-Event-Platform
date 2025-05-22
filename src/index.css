@@ -39,7 +39,7 @@ a:hover {
 body {
   margin: 0;
   padding: 0;
-  overflow-x: hidden; /* ✅ Prevent horizontal scroll */
+  overflow-x: hidden;
   min-width: 320px;
   min-height: 100vh;
 }
@@ -54,5 +54,10 @@ h1 {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem; 
 }
 

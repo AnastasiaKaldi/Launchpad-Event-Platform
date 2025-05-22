@@ -142,7 +142,7 @@ function Checkout() {
             </p>
             <button
               type="submit"
-              class="mt-4 inline-flex w-full items-center justify-center rounded bg-[#620808] py-2.5 px-4 text-base font-semibold tracking-wide text-[#f5e5ba] text-opacity-80 outline-none ring-offset-2 transition hover:text-opacity-100 focus:ring-2 focus:ring-teal-500 sm:text-lg"
+              class="mt-4 inline-flex w-full items-center justify-center rounded bg-[#620808] py-2.5 px-4 text-base font-semibold tracking-wide text-[#dbd5c5] text-opacity-80 outline-none ring-offset-2 transition hover:text-opacity-100 focus:ring-2 focus:ring-teal-500 sm:text-lg"
               style={{ fontFamily: "Inknut Antiqua" }}
             >
               Place Order
@@ -164,16 +164,16 @@ function Checkout() {
               <li class="flex justify-between">
                 <div class="inline-flex">
                   <div class="ml-3" style={{ fontFamily: "Inknut Antiqua" }}>
-                    <p class="text-lg font-semibold text-[#FBE7B2]">
+                    <p class="text-lg font-semibold text-[#dbd5c5]">
                       Nano Titanium Hair Dryer
                     </p>
-                    <p class="text-md font-medium text-[#FBE7B2] text-opacity-80">
+                    <p class="text-md font-medium text-[#dbd5c5] text-opacity-80">
                       Pdf, doc Kindle
                     </p>
                   </div>
                 </div>
                 <p
-                  class="text-lg font-semibold text-[#FBE7B2]"
+                  class="text-lg font-semibold text-[#dbd5c5]"
                   style={{ fontFamily: "Inknut Antiqua" }}
                 >
                   $260.00
@@ -182,16 +182,16 @@ function Checkout() {
               <li class="flex justify-between">
                 <div class="inline-flex">
                   <div class="ml-3" style={{ fontFamily: "Inknut Antiqua" }}>
-                    <p class="font-semibold text-lg text-[#FBE7B2]">
+                    <p class="font-semibold text-lg text-[#dbd5c5]">
                       Luisia H35
                     </p>
-                    <p class="text-md font-medium text-[#FBE7B2] text-opacity-80">
+                    <p class="text-md font-medium text-[#dbd5c5] text-opacity-80">
                       Hair Dryer
                     </p>
                   </div>
                 </div>
                 <p
-                  class="text-lg font-semibold text-[#FBE7B2]"
+                  class="text-lg font-semibold text-[#dbd5c5]"
                   style={{ fontFamily: "Inknut Antiqua" }}
                 >
                   $350.00
@@ -201,14 +201,14 @@ function Checkout() {
             <div class="my-5 h-0.5 w-full bg-[#FBE7B2] bg-opacity-30"></div>
             <div class="space-y-2">
               <p
-                class="flex justify-between text-lg font-bold text-[#FBE7B2]"
+                class="flex justify-between text-lg font-bold text-[#dbd5c5]"
                 style={{ fontFamily: "Inknut Antiqua" }}
               >
                 <span>Total price:</span>
                 <span style={{ fontFamily: "Inknut Antiqua" }}> $510.00</span>
               </p>
               <p
-                class="flex justify-between text-md font-medium text-[#FBE7B2]"
+                class="flex justify-between text-md font-medium text-[#dbd5c5]"
                 style={{ fontFamily: "Inknut Antiqua" }}
               >
                 <span>Vat: 10%</span>
@@ -217,7 +217,7 @@ function Checkout() {
             </div>
           </div>
           <div
-            class="relative mt-10 text-[#FBE7B2]"
+            class="relative mt-10 text-[#dbd5c5]"
             style={{ fontFamily: "Inknut Antiqua" }}
           >
             <h3 class="mb-5 text-2xl font-bold">Support</h3>

@@ -7,7 +7,7 @@ function Navbar() {
     <header className="absolute top-0 left-0 w-full z-50">
       <div
         className="relative flex w-full flex-col overflow-hidden px-4 py-2 md:flex-row md:items-center"
-        style={{ backgroundColor: "rgba(98, 8, 8, 0.6)" }} // semi-transparent
+        style={{ backgroundColor: "rgba(98, 8, 8, 0.6)" }}
       >
         <a
           href="#"
@@ -50,27 +50,18 @@ function Navbar() {
               <a
                 className="text-[#dbd5c5] hover:text-[#a79066]"
                 style={{ fontFamily: "Inknut Antiqua" }}
-                href="#"
+                href="#events"
               >
-                Pricing
+                Events
               </a>
             </li>
             <li className="md:mr-12">
               <a
                 className="text-[#dbd5c5] hover:text-[#a79066]"
                 style={{ fontFamily: "Inknut Antiqua" }}
-                href="#"
+                href="#create-events"
               >
-                Features
-              </a>
-            </li>
-            <li className="md:mr-12">
-              <a
-                className="text-[#dbd5c5] hover:text-[#a79066]"
-                style={{ fontFamily: "Inknut Antiqua" }}
-                href="#"
-              >
-                Support
+                Create Events
               </a>
             </li>
             <li className="md:mr-4">

@@ -1,6 +1,37 @@
 import signup from "../src/assets/SignUp.jpg";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+
 function SignUp() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await fetch("http://localhost:5050/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password, role: "user" }), // you can also add role selection later
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert("Registration successful! You can now log in.");
+        // Optionally redirect to login page
+      } else {
+        alert(data.message || "Registration failed");
+      }
+    } catch (err) {
+      console.error("Registration error:", err);
+      alert("Server error");
+    }
+  };
+
   return (
     <div class="flex w-full flex-wrap">
       <div class="flex w-full flex-col md:w-1/2 lg:w-1/3 bg-[#BA7F7F]">
@@ -16,18 +47,21 @@ function SignUp() {
         </div>
         <div class="my-auto flex flex-col justify-center px-6 pt-8 sm:px-24 md:justify-start md:px-8 md:pt-0 lg:px-12">
           <p
-            class="text-center text-3xl font-bold text-[#FBE7B2]"
+            class="text-center text-3xl font-bold text-[#dbd5c5]"
             style={{ fontFamily: "Inknut Antiqua" }}
           >
             Welcome!
           </p>
           <p
-            class="mt-2 text-2xl text-center text-[#FBE7B2]"
+            class="mt-2 text-2xl text-center text-[#dbd5c5]"
             style={{ fontFamily: "Inknut Antiqua" }}
           >
             Are you ready to create your own amazing events?
           </p>
-          <form class="flex flex-col pt-3 md:pt-8">
+          <form
+            className="flex flex-col pt-3 md:pt-8"
+            onSubmit={handleRegister}
+          >
             <div class="flex flex-col pt-4">
               <div class="relative flex overflow-hidden rounded-lg border focus-within:border-transparent focus-within:ring-2 transition focus-within:ring-blue-600">
                 <span class="inline-flex items-center border-r border-gray-300 bg-white px-3 text-sm text-gray-500 shadow-sm">
@@ -43,8 +77,10 @@ function SignUp() {
                 </span>
                 <input
                   type="email"
-                  id="login-email"
-                  class="w-full flex-1 appearance-none border-gray-300 bg-white py-2 px-4 text-base text-gray-700 placeholder-gray-400  focus:outline-none"
+                  id="register-email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full flex-1 appearance-none border-gray-300 bg-[#BA7F7F] py-4 px-4 text-base text-[#dbd5c5] placeholder-[#dbd5c5] focus:outline-none"
                   placeholder="Email"
                 />
               </div>
@@ -64,18 +100,20 @@ function SignUp() {
                 </span>
                 <input
                   type="password"
-                  id="login-password"
-                  class="w-full flex-1 appearance-none border-gray-300 bg-white py-2 px-4 text-base text-gray-700 placeholder-gray-400  focus:outline-none"
+                  id="register-password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full flex-1 appearance-none border-gray-300 bg-[#BA7F7F] py-4 px-4 text-base text-[#dbd5c5] placeholder-[#dbd5c5] focus:outline-none"
                   placeholder="Password"
                 />
               </div>
             </div>
             <button
               type="submit"
-              class="w-full rounded-lg bg-[#620808] text-lg px-4 py-2 text-center  font-semibold text-[#FBE7B2] shadow-md transition ease-in hover:bg-blue-600 focus:outline-none focus:ring-2"
+              class="w-full rounded-lg bg-[#620808] text-lg px-4 py-2 text-center  font-semibold text-[#dbd5c5] shadow-md transition ease-in hover:bg-blue-600 focus:outline-none focus:ring-2"
             >
               <span
-                class="w-full text-[#FBE7B2]"
+                class="w-full text-[#dbd5c5]"
                 style={{ fontFamily: "Inknut Antiqua" }}
               >
                 {" "}
@@ -85,7 +123,7 @@ function SignUp() {
           </form>
           <div class="pt-12 pb-12 text-center">
             <p
-              className="text-[#FBE7B2] text-xl"
+              className="text-[#dbd5c5] text-xl"
               style={{ fontFamily: "Inknut Antiqua" }}
             >
               Already have an account?
