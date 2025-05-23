@@ -23,6 +23,7 @@ const filterOptions = [
 
 const EventsPage = () => {
   const [events, setEvents] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState(new Set());
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -34,15 +35,50 @@ const EventsPage = () => {
     fetchEvents();
   }, []);
 
+  const toggleCategory = (label) => {
+    setSelectedCategories((prev) => {
+      const next = new Set(prev);
+      if (next.has(label)) {
+        next.delete(label);
+      } else {
+        next.add(label);
+      }
+      return next;
+    });
+  };
+
+  const filteredEvents =
+    selectedCategories.size > 0
+      ? events.filter((event) => selectedCategories.has(event.category))
+      : events;
+
   return (
     <section id="events" className="bg-[#dbd5c5] py-6 sm:py-8 lg:py-12">
       <div className="mx-auto max-w-[80%] px-4 md:px-8">
+        {/* Show All / Clear Filters Button */}
+        {selectedCategories.size > 0 && (
+          <div className="mb-6 text-center">
+            <button
+              onClick={() => setSelectedCategories(new Set())}
+              className="px-4 py-2 rounded border-2 border-[#620808] text-[#620808] hover:bg-[#620808] hover:text-[#dbd5c5] transition"
+              style={{ fontFamily: "Inknut Antiqua" }}
+            >
+              Show All
+            </button>
+          </div>
+        )}
+
         {/* Filter Bubble Row */}
         <div className="mb-10 flex flex-wrap justify-center gap-4 md:gap-6">
           {filterOptions.map((option, index) => (
             <button
               key={index}
-              className="flex flex-col items-center justify-center w-24 h-24 rounded-full border-2 border-[#dbd5c5] bg-[#dbd5c5] text-[#620808] hover:bg-[#620808] hover:text-[#dbd5c5] transition duration-200 shadow"
+              onClick={() => toggleCategory(option.label)}
+              className={`flex flex-col items-center justify-center w-28 h-28 rounded-full border-2 transition duration-200 shadow ${
+                selectedCategories.has(option.label)
+                  ? "bg-[#620808] text-[#dbd5c5]"
+                  : "bg-[#dbd5c5] text-[#620808] hover:bg-[#620808] hover:text-[#dbd5c5]"
+              }`}
               style={{ fontFamily: "Inknut Antiqua" }}
             >
               <img
@@ -50,7 +86,7 @@ const EventsPage = () => {
                 alt={option.label}
                 className="w-8 h-8 object-contain mb-1"
               />
-              <span className="text-xs text-center leading-tight">
+              <span className="text-md text-center leading-tight">
                 {option.label}
               </span>
             </button>
@@ -74,9 +110,7 @@ const EventsPage = () => {
 
         {/* Grid Container */}
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-12">
-          {/* Repeat this article block 9 times with different content or images */}
-
-          {events.map((event, index) => (
+          {filteredEvents.map((event, index) => (
             <article
               key={index}
               className="flex flex-col items-center gap-4 md:flex-row lg:gap-6"
@@ -104,12 +138,13 @@ const EventsPage = () => {
                 >
                   {event.description}
                 </p>
-                <p
-                  className="text-sm text-gray-700 italic"
+                <Link
+                  to="/event"
+                  className="font-semibold text-rose-500 transition duration-100 hover:text-rose-600 active:text-rose-700"
                   style={{ fontFamily: "Inknut Antiqua" }}
                 >
-                  Things to know: {event.things_to_know}
-                </p>
+                  Read more
+                </Link>
               </div>
             </article>
           ))}

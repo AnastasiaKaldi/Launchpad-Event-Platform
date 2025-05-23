@@ -17,7 +17,7 @@ function Navbar() {
             className="text-[#dbd5c5]"
             style={{ fontFamily: "Inknut Antiqua" }}
           >
-            the future
+            Eventure
           </span>
         </a>
         <input type="checkbox" className="peer hidden" id="navbar-open" />
