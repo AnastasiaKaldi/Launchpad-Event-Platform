@@ -1,8 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import org from "../src/assets/OrgEvent.webp";
 import upload from "../src/assets/upload.png";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
+axios.defaults.withCredentials = true;
 
 function OrgEvent() {
+  const navigate = useNavigate();
+
+  // Setup form/ticket state
   const [formData, setFormData] = useState({
     title: "",
     summary: "",
@@ -15,6 +22,18 @@ function OrgEvent() {
   const [tickets, setTickets] = useState([
     { name: "", price: "", isFree: false },
   ]);
+
+  // Setup auth check state
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:5050/api/auth/me")
+      .then(() => setLoading(false))
+      .catch(() => navigate("/signin"));
+  }, [navigate]);
+
+  if (loading) return null;
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;

@@ -1,7 +1,8 @@
 import "./App.css";
 import "./index.css";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+
 import coorporation from "../src/assets/cooperation.png";
 import hobby from "../src/assets/hobby.png";
 import music from "../src/assets/musical-notes.png";
@@ -9,7 +10,6 @@ import nightlife from "../src/assets/nightlife.png";
 import food from "../src/assets/ramen.png";
 import festival from "../src/assets/decoration.png";
 import familyEvent from "../src/assets/familyEvent.png";
-import { useEffect, useState } from "react";
 
 const filterOptions = [
   { label: "Music", image: music },
@@ -25,24 +25,38 @@ const EventsPage = () => {
   const [events, setEvents] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState(new Set());
 
-  useEffect(() => {
-    const fetchEvents = async () => {
-      const res = await fetch("http://localhost:5050/api/events");
+  const fetchTicketmasterEvents = async () => {
+    try {
+      const res = await fetch(
+        `https://app.ticketmaster.com/discovery/v2/events.json?countryCode=GB&size=20&apikey=NspRwMaQPuuFEMtyjjX9yFNppHYreAkV`
+      );
       const data = await res.json();
-      console.log("🔥 Events from backend:", data);
-      setEvents(data);
-    };
-    fetchEvents();
+      console.log("Events from Ticketmaster:", data);
+
+      if (data._embedded?.events) {
+        const mapped = data._embedded.events.map((e) => ({
+          title: e.name,
+          image_url: e.images?.[0]?.url || "",
+          date: e.dates?.start?.localDate || "",
+          description: e.info || e.pleaseNote || "No description provided",
+          category: e.classifications?.[0]?.segment?.name || "Other",
+          url: e.url || "#",
+        }));
+        setEvents(mapped);
+      }
+    } catch (err) {
+      console.error("Failed to fetch Ticketmaster events:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchTicketmasterEvents();
   }, []);
 
   const toggleCategory = (label) => {
     setSelectedCategories((prev) => {
       const next = new Set(prev);
-      if (next.has(label)) {
-        next.delete(label);
-      } else {
-        next.add(label);
-      }
+      next.has(label) ? next.delete(label) : next.add(label);
       return next;
     });
   };
@@ -55,7 +69,6 @@ const EventsPage = () => {
   return (
     <section id="events" className="bg-[#dbd5c5] py-6 sm:py-8 lg:py-12">
       <div className="mx-auto max-w-[80%] px-4 md:px-8">
-        {/* Show All / Clear Filters Button */}
         {selectedCategories.size > 0 && (
           <div className="mb-6 text-center">
             <button
@@ -68,7 +81,6 @@ const EventsPage = () => {
           </div>
         )}
 
-        {/* Filter Bubble Row */}
         <div className="mb-10 flex flex-wrap justify-center gap-4 md:gap-6">
           {filterOptions.map((option, index) => (
             <button
@@ -92,7 +104,7 @@ const EventsPage = () => {
             </button>
           ))}
         </div>
-        {/* Title and Description */}
+
         <div className="mb-10 md:mb-16">
           <h2
             className="mb-4 text-left text-5xl font-bold text-[#620808] md:mb-6"
@@ -104,11 +116,10 @@ const EventsPage = () => {
             className="text-left max-w-screen-md text-[#620808] md:text-lg"
             style={{ fontFamily: "Inknut Antiqua" }}
           >
-            Find the perfect events for you
+            Browse live events now!
           </p>
         </div>
 
-        {/* Grid Container */}
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-12">
           {filteredEvents.map((event, index) => (
             <article
@@ -127,7 +138,7 @@ const EventsPage = () => {
                   {new Date(event.date).toLocaleDateString()}
                 </span>
                 <h2
-                  className="text-xl font-bold text-gray-800"
+                  className="text-xl font-bold text-[#620808]"
                   style={{ fontFamily: "Inknut Antiqua" }}
                 >
                   {event.title}
@@ -138,13 +149,15 @@ const EventsPage = () => {
                 >
                   {event.description}
                 </p>
-                <Link
-                  to="/event"
+                <a
+                  href={event.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="font-semibold text-rose-500 transition duration-100 hover:text-rose-600 active:text-rose-700"
                   style={{ fontFamily: "Inknut Antiqua" }}
                 >
                   Read more
-                </Link>
+                </a>
               </div>
             </article>
           ))}

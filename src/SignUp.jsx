@@ -37,12 +37,11 @@ function SignUp() {
       <div class="flex w-full flex-col md:w-1/2 lg:w-1/3 bg-[#BA7F7F]">
         <div class="flex justify-center  md:-mb-24 md:justify-start md:pl-12">
           <a
-            href="#"
-            class="border-b-4 border-b-[#620808] pt-12 pb-2 text-2xl font-bold text-[#620808]"
+            href="\"
+            class="border-b-4 border-b-[#620808] pt-12 pb-2 text-4xl font-bold text-[#620808]"
             style={{ fontFamily: "Inknut Antiqua" }}
           >
-            {" "}
-            Reet.{" "}
+            Eventure
           </a>
         </div>
         <div class="my-auto flex flex-col justify-center px-6 pt-8 sm:px-24 md:justify-start md:px-8 md:pt-0 lg:px-12">

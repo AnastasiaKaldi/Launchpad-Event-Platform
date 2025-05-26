@@ -33,7 +33,7 @@ function Event() {
   const images = [
     "https://images.unsplash.com/photo-1504672281656-e4981d70414b?auto=format&fit=crop&w=1170&q=80",
     "https://images.unsplash.com/photo-1542751110-97427bbecf20?auto=format&fit=crop&w=1170&q=80",
-    "https://images.unsplash.com/photo-1542144612-1ba00456b5d3?auto=format&fit=crop&w=1170&q=80",
+    "https://images.unsplash.com/photo-1504672281656-e4981d70414b?auto=format&fit=crop&w=1170&q=80",
   ];
 
   const settings = {
@@ -199,7 +199,7 @@ function Event() {
       >
         <button
           onClick={handleCheckout}
-          className="w-full text-xl bg-[#620808] text-[#FBE7B2] py-3 rounded-md font-semibold hover:bg-red-800 transition"
+          className="w-full text-xl bg-[#620808] text-[#dbd5c5] py-3 rounded-md font-semibold hover:bg-red-800 transition"
         >
           Checkout
         </button>

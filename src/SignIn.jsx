@@ -1,13 +1,20 @@
 import signin from "../src/assets/SignIn.jpg";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const searchParams = new URLSearchParams(location.search);
+  const redirectPath = searchParams.get("redirect") || "/";
 
   const handleLogin = async (e) => {
-    e.preventDefault(); // prevent form reload
+    e.preventDefault();
 
     try {
       const res = await fetch("http://localhost:5050/api/auth/login", {
@@ -16,14 +23,14 @@ function SignIn() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
+        credentials: "include",
       });
 
       const data = await res.json();
 
       if (res.ok) {
-        localStorage.setItem("token", data.token);
         alert("Login successful");
-        // redirect or reload page if needed
+        navigate(redirectPath);
       } else {
         alert(data.message || "Login failed");
       }
@@ -38,12 +45,11 @@ function SignIn() {
       <div class="flex w-full flex-col md:w-1/2 lg:w-1/3 bg-[#BA7F7F]">
         <div class="flex justify-center  md:-mb-24 md:justify-start md:pl-12">
           <a
-            href="#"
-            class="border-b-4 border-b-[#620808] pt-12 pb-2 text-2xl font-bold text-[#620808]"
+            href="\"
+            class="border-b-4 border-b-[#620808] pt-12 pb-2 text-4xl font-bold text-[#620808]"
             style={{ fontFamily: "Inknut Antiqua" }}
           >
-            {" "}
-            Reet.{" "}
+            Eventure
           </a>
         </div>
         <div class="my-auto flex flex-col justify-center px-6 pt-8 sm:px-24 md:justify-start md:px-8 md:pt-0 lg:px-12">
