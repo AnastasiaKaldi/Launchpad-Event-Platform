@@ -6,24 +6,32 @@ import axios from "axios";
 
 axios.defaults.withCredentials = true;
 
+const CATEGORIES = [
+  "Music",
+  "Nightlife",
+  "Hobbies",
+  "Business",
+  "Food & Drink",
+  "Festivals",
+  "Family Events",
+];
+
 function OrgEvent() {
   const navigate = useNavigate();
 
-  // Setup form/ticket state
   const [formData, setFormData] = useState({
     title: "",
-    summary: "",
-    dateTime: "",
-    location: "",
-    overview: "",
-    images: [],
+    description: "",
+    date: "",
+    image_url: "",
+    category: CATEGORIES[0],
+    things_to_know: "",
   });
 
   const [tickets, setTickets] = useState([
     { name: "", price: "", isFree: false },
   ]);
 
-  // Setup auth check state
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -35,12 +43,30 @@ function OrgEvent() {
 
   if (loading) return null;
 
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
     const { name, value, files } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: files ? files : value,
-    }));
+
+    if (name === "images" && files) {
+      const base64Files = await Promise.all(
+        Array.from(files).map((file) => {
+          return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve({ base64: reader.result });
+            reader.readAsDataURL(file);
+          });
+        })
+      );
+
+      setFormData((prev) => ({
+        ...prev,
+        [name]: base64Files,
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
   const handleTicketChange = (index, field, value) => {
@@ -63,9 +89,35 @@ function OrgEvent() {
     setTickets(newTickets);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log({ ...formData, tickets }); // Replace with real submission
+    try {
+      const payload = {
+        title: formData.title,
+        summary: formData.summary,
+        dateTime: formData.dateTime,
+        location: formData.location,
+        overview: formData.overview,
+        images: Array.from(formData.images).map((file) => {
+          return file.base64 || ""; // We'll add base64 in step 2
+        }),
+        tickets,
+      };
+
+      const res = await axios.post(
+        "http://localhost:5050/api/events",
+        payload,
+        {
+          withCredentials: true,
+        }
+      );
+
+      console.log("✅ Event submitted:", res.data);
+      alert("Event submitted successfully!");
+    } catch (err) {
+      console.error("❌ Error submitting event:", err);
+      alert("Something went wrong");
+    }
   };
 
   return (
@@ -99,9 +151,7 @@ function OrgEvent() {
         onSubmit={handleSubmit}
         className="mx-auto grid max-w-screen-lg grid-cols-1 gap-10 md:grid-cols-2 px-4"
       >
-        {/* Left Side */}
         <div className="space-y-6">
-          {/* Upload */}
           <div>
             <label
               htmlFor="upload"
@@ -117,15 +167,13 @@ function OrgEvent() {
               <input
                 type="file"
                 id="upload"
-                name="images"
-                multiple
+                name="image"
                 onChange={handleChange}
                 className="hidden"
               />
             </label>
           </div>
 
-          {/* Title */}
           <div>
             <label
               className="text-[#620808] font-semibold text-lg"
@@ -142,27 +190,40 @@ function OrgEvent() {
             />
           </div>
 
-          {/* Summary */}
           <div>
             <label
               className="text-[#620808] font-semibold text-lg"
               style={{ fontFamily: "Inknut Antiqua" }}
             >
-              Summary
+              Description
             </label>
             <textarea
-              name="summary"
-              value={formData.summary}
+              name="description"
+              value={formData.description}
               onChange={handleChange}
               rows={5}
               className="mt-1 w-full rounded border bg-white border-gray-400 p-3 text-black"
             />
           </div>
+
+          <div>
+            <label
+              className="text-[#620808] font-semibold text-lg"
+              style={{ fontFamily: "Inknut Antiqua" }}
+            >
+              Things to Know
+            </label>
+            <textarea
+              name="things_to_know"
+              value={formData.things_to_know}
+              onChange={handleChange}
+              rows={3}
+              className="mt-1 w-full rounded border bg-white border-gray-400 p-3 text-black"
+            />
+          </div>
         </div>
 
-        {/* Right Side */}
         <div className="space-y-6">
-          {/* Date & Time */}
           <div>
             <label
               className="text-[#620808] font-semibold text-lg"
@@ -172,14 +233,13 @@ function OrgEvent() {
             </label>
             <input
               type="datetime-local"
-              name="dateTime"
-              value={formData.dateTime}
+              name="date"
+              value={formData.date}
               onChange={handleChange}
               className="mt-1 w-full rounded border bg-white border-gray-400 p-3 text-black"
             />
           </div>
 
-          {/* Location */}
           <div>
             <label
               className="text-[#620808] font-semibold text-lg"
@@ -196,26 +256,29 @@ function OrgEvent() {
             />
           </div>
 
-          {/* Overview */}
           <div>
             <label
               className="text-[#620808] font-semibold text-lg"
               style={{ fontFamily: "Inknut Antiqua" }}
             >
-              Overview
+              Category
             </label>
-            <textarea
-              name="overview"
-              value={formData.overview}
+            <select
+              name="category"
+              value={formData.category}
               onChange={handleChange}
-              rows={5}
               className="mt-1 w-full rounded border bg-white border-gray-400 p-3 text-black"
-            />
+            >
+              {CATEGORIES.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
       </form>
 
-      {/* Ticket Options Section */}
       <div className="mx-auto mt-20 max-w-screen-lg px-4">
         <h2
           className="text-3xl font-bold text-[#620808] mb-6"
@@ -229,7 +292,6 @@ function OrgEvent() {
             key={index}
             className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end mb-6 bg-[#BA7F7F] p-4 rounded-lg shadow"
           >
-            {/* Ticket Name */}
             <div>
               <label
                 className="block text-[#dbd5c5] font-semibold mb-1"
@@ -243,12 +305,9 @@ function OrgEvent() {
                 onChange={(e) =>
                   handleTicketChange(index, "name", e.target.value)
                 }
-                placeholder="e.g. VIP, General Admission"
                 className="w-full rounded border bg-white border-gray-400 p-2 text-black"
               />
             </div>
-
-            {/* Ticket Price */}
             <div>
               <label
                 className="block text-[#dbd5c5] font-semibold mb-1"
@@ -263,12 +322,9 @@ function OrgEvent() {
                   handleTicketChange(index, "price", e.target.value)
                 }
                 disabled={ticket.isFree}
-                placeholder={ticket.isFree ? "Free" : "e.g. 20"}
                 className="w-full rounded border bg-white border-gray-400 p-2 text-black"
               />
             </div>
-
-            {/* Free Toggle + Remove */}
             <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
               <label className="flex items-center space-x-2">
                 <input
@@ -296,7 +352,6 @@ function OrgEvent() {
           </div>
         ))}
 
-        {/* Add Ticket Button */}
         <button
           onClick={addTicket}
           className="mt-4 rounded-full bg-[#BA7F7F] px-6 py-2 text-white font-semibold hover:bg-[#a16767] transition"
@@ -306,7 +361,6 @@ function OrgEvent() {
         </button>
       </div>
 
-      {/* Final Save Button below ticket section */}
       <div className="mx-auto mt-10 max-w-screen-lg px-4">
         <button
           type="submit"

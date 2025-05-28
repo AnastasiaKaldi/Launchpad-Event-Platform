@@ -6,19 +6,19 @@ import slide3 from "../src/assets/restaurant.jpg";
 const slides = [
   {
     image: slide1,
-    headline: "Discover Unforgettable Experiences",
+    headline: "Find the Best Concerts in Town",
     buttonText: "View Events",
     link: "#events",
   },
   {
     image: slide2,
-    headline: "Join the Best Concerts in Town",
+    headline: "Your ticket to unforgettable memories",
     buttonText: "Browse Events",
     link: "#events",
   },
   {
     image: slide3,
-    headline: "Your Ticket to Great Memories",
+    headline: "Eat your way through the Night",
     buttonText: "See What’s On",
     link: "#events",
   },

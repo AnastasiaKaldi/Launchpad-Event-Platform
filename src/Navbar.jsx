@@ -1,8 +1,52 @@
-import "./App.css";
-import "./index.css";
-import { Link } from "react-router-dom";
+import { useEffect, useState, useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { FaUserCircle } from "react-icons/fa";
+import { FiLogOut } from "react-icons/fi";
+import footer from "../src/assets/footer.png";
 
 function Navbar() {
+  const [user, setUser] = useState(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const navigate = useNavigate();
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:5050/api/auth/me", { withCredentials: true })
+      .then((res) => {
+        setUser(res.data.user);
+      })
+      .catch(() => {
+        setUser(null);
+      });
+  }, []);
+
+  // Close dropdown if clicked outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await axios.post(
+        "http://localhost:5050/api/auth/logout",
+        {},
+        { withCredentials: true }
+      );
+      setUser(null);
+      navigate("/");
+    } catch (err) {
+      console.error("Logout failed", err);
+    }
+  };
+
   return (
     <header className="absolute top-0 left-0 w-full z-50">
       <div
@@ -10,9 +54,10 @@ function Navbar() {
         style={{ backgroundColor: "rgba(98, 8, 8, 0.6)" }}
       >
         <a
-          href="#"
+          href="\"
           className="flex items-center whitespace-nowrap text-4xl font-black ml-8"
         >
+          <img class="h-10 object-contain" src={footer} alt="" />
           <span
             className="text-[#dbd5c5]"
             style={{ fontFamily: "Inknut Antiqua" }}
@@ -20,6 +65,7 @@ function Navbar() {
             Eventure
           </span>
         </a>
+
         <input type="checkbox" className="peer hidden" id="navbar-open" />
         <label
           className="absolute top-5 right-7 cursor-pointer md:hidden"
@@ -41,6 +87,7 @@ function Navbar() {
             />
           </svg>
         </label>
+
         <nav
           aria-label="Header Navigation"
           className="peer-checked:mt-8 peer-checked:max-h-56 flex max-h-0 w-full flex-col items-center justify-between overflow-hidden transition-all md:ml-24 md:max-h-full md:flex-row md:items-start"
@@ -64,16 +111,40 @@ function Navbar() {
                 Create Events
               </a>
             </li>
-            <li className="md:mr-4">
-              <Link to="/signin">
-                <button
-                  className="rounded-md border-2 border-[#dbd5c5] px-6 py-1 font-medium text-[#dbd5c5] transition-colors hover:bg-[#FFE9C1] hover:text-[#a79066]"
-                  style={{ fontFamily: "Inknut Antiqua" }}
-                >
-                  Log in
-                </button>
-              </Link>
-            </li>
+
+            {user ? (
+              <>
+                <li className="md:mr-2">
+                  <div
+                    className="flex items-center space-x-2 rounded-md border-2 border-[#dbd5c5] px-4 py-1 text-[#dbd5c5] transition-colors hover:bg-[#FFE9C1] hover:text-[#a79066]"
+                    style={{ fontFamily: "Inknut Antiqua" }}
+                  >
+                    <FaUserCircle className="text-xl" />
+                    <span>Welcome, {user.role}</span>
+                  </div>
+                </li>
+                <li>
+                  <button
+                    onClick={handleLogout}
+                    title="Log out"
+                    className="p-2 rounded-full text-[#dbd5c5] hover:text-[#a79066] transition"
+                  >
+                    <FiLogOut className="text-2xl" />
+                  </button>
+                </li>
+              </>
+            ) : (
+              <li className="md:mr-4">
+                <Link to="/signin">
+                  <button
+                    className="rounded-md border-2 border-[#dbd5c5] px-6 py-1 font-medium text-[#dbd5c5] transition-colors hover:bg-[#FFE9C1] hover:text-[#a79066]"
+                    style={{ fontFamily: "Inknut Antiqua" }}
+                  >
+                    Log in
+                  </button>
+                </Link>
+              </li>
+            )}
           </ul>
         </nav>
       </div>

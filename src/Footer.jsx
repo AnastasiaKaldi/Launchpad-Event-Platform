@@ -1,14 +1,11 @@
 import React from "react";
+import footer from "../src/assets/footer.png";
 
 function Footer() {
   return (
     <footer class="relative mt-20 bg-[#BA7F7F] px-4 pt-20">
-      <div class="absolute -top-10 left-1/2 h-16 w-16 -translate-x-1/2 rounded-xl border-4 border-[#BA7F7F] bg-white p-2">
-        <img
-          class="h-full object-contain"
-          src="/images/logo-circle.png"
-          alt=""
-        />
+      <div class="absolute -top-10 left-1/2 h-16 w-16 -translate-x-1/2 rounded-xl border-4 border-[#BA7F7F] bg-[#dbd5c5] p-2">
+        <img class="h-full object-contain" src={footer} alt="" />
       </div>
       <nav
         aria-label="Footer Navigation"

@@ -25,32 +25,46 @@ const EventsPage = () => {
   const [events, setEvents] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState(new Set());
 
-  const fetchTicketmasterEvents = async () => {
-    try {
-      const res = await fetch(
-        `https://app.ticketmaster.com/discovery/v2/events.json?countryCode=GB&size=20&apikey=NspRwMaQPuuFEMtyjjX9yFNppHYreAkV`
-      );
-      const data = await res.json();
-      console.log("Events from Ticketmaster:", data);
-
-      if (data._embedded?.events) {
-        const mapped = data._embedded.events.map((e) => ({
-          title: e.name,
-          image_url: e.images?.[0]?.url || "",
-          date: e.dates?.start?.localDate || "",
-          description: e.info || e.pleaseNote || "No description provided",
-          category: e.classifications?.[0]?.segment?.name || "Other",
-          url: e.url || "#",
-        }));
-        setEvents(mapped);
-      }
-    } catch (err) {
-      console.error("Failed to fetch Ticketmaster events:", err);
-    }
-  };
-
   useEffect(() => {
-    fetchTicketmasterEvents();
+    const fetchAllEvents = async () => {
+      try {
+        // Ticketmaster Events
+        const ticketmasterRes = await fetch(
+          `https://app.ticketmaster.com/discovery/v2/events.json?countryCode=GB&size=20&apikey=NspRwMaQPuuFEMtyjjX9yFNppHYreAkV`
+        );
+        const ticketmasterData = await ticketmasterRes.json();
+
+        const tmEvents =
+          ticketmasterData._embedded?.events.map((e) => ({
+            title: e.name,
+            image_url: e.images?.[0]?.url || "",
+            date: e.dates?.start?.localDate || "",
+            description: e.info || e.pleaseNote || "No description provided",
+            category: e.classifications?.[0]?.segment?.name || "Other",
+            url: e.url || "#",
+          })) || [];
+
+        // Local Events
+        const localRes = await fetch("http://localhost:5050/api/events");
+        const localData = await localRes.json();
+
+        const localEvents = localData.map((e) => ({
+          title: e.title,
+          image_url: e.images?.[0] || "", // Use base64 blob
+          date: e.dateTime,
+          description: e.summary || "No description provided",
+          category: e.category || "Custom",
+          url: `/event/${e.id}`, // Optional detail route
+        }));
+
+        // Merge both
+        setEvents([...localEvents, ...tmEvents]);
+      } catch (err) {
+        console.error("Failed to fetch events:", err);
+      }
+    };
+
+    fetchAllEvents();
   }, []);
 
   const toggleCategory = (label) => {
