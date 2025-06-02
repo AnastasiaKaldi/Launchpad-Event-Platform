@@ -1,13 +1,13 @@
 import signin from "../src/assets/SignIn.jpg";
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
 function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const location = useLocation();
 
   const searchParams = new URLSearchParams(location.search);
@@ -30,7 +30,7 @@ function SignIn() {
 
       if (res.ok) {
         alert("Login successful");
-        navigate(redirectPath);
+        window.location.href = redirectPath; // Full reload
       } else {
         alert(data.message || "Login failed");
       }

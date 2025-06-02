@@ -13,6 +13,8 @@ import Event from "./Event.jsx";
 import Checkout from "./Checkout.jsx";
 import OrgEvent from "./OrgEvent.jsx";
 import Footer from "./Footer.jsx";
+import Manage from "./Manage.jsx";
+import JoinedEvents from "./JoinedEvents.jsx";
 
 import "./index.css";
 
@@ -32,6 +34,8 @@ const router = createBrowserRouter([
       { path: "checkout", element: <Checkout /> },
       { path: "footer", element: <Footer /> },
       { path: "orgevent", element: <OrgEvent /> },
+      { path: "manage", element: <Manage /> },
+      { path: "joined", element: <JoinedEvents /> },
     ],
   },
 ]);
