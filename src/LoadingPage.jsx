@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import Homepage from "./Homepage";
 import EventsPage from "./EventsPage";
-import CreateEvent from "../src/Createevent";
+import CreateEvent from "../src/CreateEvent";
 import Footer from "./Footer";
 
 const LandingPage = () => {
