@@ -6,7 +6,7 @@ import noEvents from "../src/assets/noEvents.png";
 function ManageEvents() {
   const [events, setEvents] = useState([]);
   const navigate = useNavigate();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  // const [sidebarOpen, setSidebarOpen] = useState(true);
 
   useEffect(() => {
     axios

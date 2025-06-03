@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
-import org from "../src/assets/OrgEvent.webp";
-import upload from "../src/assets/upload.png";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
-axios.defaults.withCredentials = true;
+import org from "../src/assets/OrgEvent.webp";
+import upload from "../src/assets/upload.png";
 
 const CATEGORIES = [
   "Music",
@@ -18,359 +16,208 @@ const CATEGORIES = [
 
 function OrgEvent() {
   const navigate = useNavigate();
-
+  const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     title: "",
-    description: "",
-    date: "",
-    image_url: "",
-    category: CATEGORIES[0],
+    summary: "",
+    datetime: "",
+    location: "",
+    overview: "",
     things_to_know: "",
+    category: CATEGORIES[0],
+    images: [],
   });
-
   const [tickets, setTickets] = useState([
     { name: "", price: "", isFree: false },
   ]);
 
-  const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     axios
-      .get("http://localhost:5050/api/auth/me")
-      .then(() => setLoading(false))
+      .get("http://localhost:5050/api/auth/me", { withCredentials: true })
+      .then((res) => {
+        console.log("✅ Authenticated user:", res.data);
+        setLoading(false);
+      })
       .catch(() => navigate("/signin"));
   }, [navigate]);
 
-  if (loading) return null;
-
   const handleChange = async (e) => {
     const { name, value, files } = e.target;
-
-    if (name === "images" && files) {
-      const base64Files = await Promise.all(
-        Array.from(files).map((file) => {
-          return new Promise((resolve) => {
+    if (files) {
+      const images = await Promise.all(
+        [...files].map((file) => {
+          return new Promise((res) => {
             const reader = new FileReader();
-            reader.onload = () => resolve({ base64: reader.result });
+            reader.onloadend = () => res(reader.result);
             reader.readAsDataURL(file);
           });
         })
       );
-
-      setFormData((prev) => ({
-        ...prev,
-        [name]: base64Files,
-      }));
+      console.log("📸 Uploaded images:", images);
+      setFormData((prev) => ({ ...prev, images }));
     } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
+      setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
 
-  const handleTicketChange = (index, field, value) => {
-    const newTickets = [...tickets];
-    newTickets[index][field] =
-      field === "isFree" ? !newTickets[index].isFree : value;
-    if (field === "isFree" && newTickets[index].isFree) {
-      newTickets[index].price = "";
+  const handleTicketChange = (i, field, value) => {
+    const updated = [...tickets];
+    if (field === "isFree") {
+      updated[i].isFree = !updated[i].isFree;
+      if (updated[i].isFree) updated[i].price = "";
+    } else {
+      updated[i][field] = value;
     }
-    setTickets(newTickets);
+    setTickets(updated);
   };
 
-  const addTicket = () => {
+  const addTicket = () =>
     setTickets([...tickets, { name: "", price: "", isFree: false }]);
-  };
-
-  const removeTicket = (index) => {
-    const newTickets = [...tickets];
-    newTickets.splice(index, 1);
-    setTickets(newTickets);
-  };
+  const removeTicket = (i) => setTickets(tickets.filter((_, idx) => idx !== i));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const payload = {
-        title: formData.title,
-        summary: formData.summary,
-        dateTime: formData.dateTime,
-        location: formData.location,
-        overview: formData.overview,
-        images: Array.from(formData.images).map((file) => {
-          return file.base64 || ""; // We'll add base64 in step 2
-        }),
-        tickets,
+        ...formData,
+        title: formData.title || "Untitled Event",
+        summary: formData.summary || "No summary provided.",
+        datetime: formData.datetime || new Date().toISOString(),
+        location: formData.location || "Unknown location",
+        overview: formData.overview || "No overview.",
+        things_to_know: formData.things_to_know || "None",
+        category: formData.category || "General",
+        tickets:
+          tickets.length > 0
+            ? tickets
+            : [{ name: "General", price: "0", isFree: true }],
       };
 
-      const res = await axios.post(
-        "http://localhost:5050/api/events",
-        payload,
-        {
-          withCredentials: true,
-        }
-      );
+      console.log("📤 Submitting fallback payload:", payload);
 
-      console.log("✅ Event submitted:", res.data);
-      alert("Event submitted successfully!");
+      await axios.post("http://localhost:5050/api/events", payload, {
+        withCredentials: true,
+      });
+
+      alert("✅ Event submitted!");
     } catch (err) {
-      console.error("❌ Error submitting event:", err);
-      alert("Something went wrong");
+      console.error("❌ Submission error:", err?.response?.data || err.message);
+      alert("❌ Failed to submit event");
     }
   };
 
+  if (loading) return null;
+
   return (
-    <div className="w-screen bg-[#dbd5c5] min-h-screen py-16 px-4">
-      {/* Header */}
-      <div className="relative mx-auto mb-20 max-w-screen-lg overflow-hidden rounded-xl py-20 text-center text-white shadow-xl">
+    <div className="bg-[#dbd5c5] min-h-screen py-10 px-6">
+      <div className="text-center relative mb-12">
         <img
           src={org}
-          alt="Event Banner"
-          className="absolute inset-0 h-full w-full object-cover z-0"
+          alt="Header"
+          className="w-full h-60 object-cover rounded-xl"
         />
-        <div className="absolute inset-0 bg-[#BA7F7F]/80 z-10"></div>
-        <div className="relative z-20 px-4">
-          <h1
-            className="text-4xl text-[#dbd5c5] font-bold md:text-5xl"
-            style={{ fontFamily: "Inknut Antiqua" }}
-          >
-            Create an Event
-          </h1>
-          <p
-            className="mt-4 text-lg text-[#dbd5c5]"
-            style={{ fontFamily: "Inknut Antiqua" }}
-          >
-            Share your event with the world!
-          </p>
+        <div className="absolute inset-0 bg-[#BA7F7F]/80 flex flex-col justify-center items-center text-[#dbd5c5]">
+          <h1 className="text-4xl font-bold">Create an Event</h1>
+          <p>Share your event with the world!</p>
         </div>
       </div>
 
-      {/* Form */}
-      <form
-        onSubmit={handleSubmit}
-        className="mx-auto grid max-w-screen-lg grid-cols-1 gap-10 md:grid-cols-2 px-4"
-      >
-        <div className="space-y-6">
-          <div>
-            <label
-              htmlFor="upload"
-              className="flex flex-col items-center justify-center space-y-4 bg-[#BA7F7F] text-[#dbd5c5] py-20 w-full text-center rounded-lg cursor-pointer hover:bg-[#a56767] transition"
-            >
-              <img src={upload} alt="Upload Icon" className="w-12 h-12" />
-              <span
-                className="text-lg font-semibold"
-                style={{ fontFamily: "Inknut Antiqua" }}
-              >
-                Upload photos and videos
-              </span>
-              <input
-                type="file"
-                id="upload"
-                name="image"
-                onChange={handleChange}
-                className="hidden"
-              />
-            </label>
-          </div>
+      <form onSubmit={handleSubmit} className="space-y-6 max-w-3xl mx-auto">
+        <label className="block text-center bg-[#BA7F7F] p-6 rounded-lg cursor-pointer text-[#dbd5c5]">
+          <img src={upload} alt="Upload" className="mx-auto w-8 h-8" />
+          Upload Images
+          <input
+            type="file"
+            name="images"
+            multiple
+            onChange={handleChange}
+            className="hidden"
+          />
+        </label>
 
-          <div>
-            <label
-              className="text-[#620808] font-semibold text-lg"
-              style={{ fontFamily: "Inknut Antiqua" }}
-            >
-              Title
-            </label>
+        {["title", "summary", "location", "overview", "things_to_know"].map(
+          (field) => (
             <input
-              type="text"
-              name="title"
-              value={formData.title}
+              key={field}
+              name={field}
+              value={formData[field]}
               onChange={handleChange}
-              className="mt-1 w-full rounded border bg-white border-gray-400 p-3 text-black"
+              placeholder={field
+                .replace(/_/g, " ")
+                .replace(/\b\w/g, (l) => l.toUpperCase())}
+              className="w-full p-2 border rounded"
             />
-          </div>
+          )
+        )}
 
-          <div>
-            <label
-              className="text-[#620808] font-semibold text-lg"
-              style={{ fontFamily: "Inknut Antiqua" }}
-            >
-              Description
-            </label>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              rows={5}
-              className="mt-1 w-full rounded border bg-white border-gray-400 p-3 text-black"
-            />
-          </div>
+        <input
+          type="datetime-local"
+          name="datetime"
+          value={formData.datetime}
+          onChange={handleChange}
+          className="w-full p-2 border rounded"
+        />
 
-          <div>
-            <label
-              className="text-[#620808] font-semibold text-lg"
-              style={{ fontFamily: "Inknut Antiqua" }}
-            >
-              Things to Know
-            </label>
-            <textarea
-              name="things_to_know"
-              value={formData.things_to_know}
-              onChange={handleChange}
-              rows={3}
-              className="mt-1 w-full rounded border bg-white border-gray-400 p-3 text-black"
-            />
-          </div>
-        </div>
-
-        <div className="space-y-6">
-          <div>
-            <label
-              className="text-[#620808] font-semibold text-lg"
-              style={{ fontFamily: "Inknut Antiqua" }}
-            >
-              Date and Time
-            </label>
-            <input
-              type="datetime-local"
-              name="date"
-              value={formData.date}
-              onChange={handleChange}
-              className="mt-1 w-full rounded border bg-white border-gray-400 p-3 text-black"
-            />
-          </div>
-
-          <div>
-            <label
-              className="text-[#620808] font-semibold text-lg"
-              style={{ fontFamily: "Inknut Antiqua" }}
-            >
-              Location
-            </label>
-            <input
-              type="text"
-              name="location"
-              value={formData.location}
-              onChange={handleChange}
-              className="mt-1 w-full rounded border bg-white border-gray-400 p-3 text-black"
-            />
-          </div>
-
-          <div>
-            <label
-              className="text-[#620808] font-semibold text-lg"
-              style={{ fontFamily: "Inknut Antiqua" }}
-            >
-              Category
-            </label>
-            <select
-              name="category"
-              value={formData.category}
-              onChange={handleChange}
-              className="mt-1 w-full rounded border bg-white border-gray-400 p-3 text-black"
-            >
-              {CATEGORIES.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-      </form>
-
-      <div className="mx-auto mt-20 max-w-screen-lg px-4">
-        <h2
-          className="text-3xl font-bold text-[#620808] mb-6"
-          style={{ fontFamily: "Inknut Antiqua" }}
+        <select
+          name="category"
+          value={formData.category}
+          onChange={handleChange}
+          className="w-full p-2 border rounded"
         >
-          Ticket Options
-        </h2>
+          {CATEGORIES.map((cat) => (
+            <option key={cat}>{cat}</option>
+          ))}
+        </select>
 
-        {tickets.map((ticket, index) => (
-          <div
-            key={index}
-            className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end mb-6 bg-[#BA7F7F] p-4 rounded-lg shadow"
-          >
-            <div>
-              <label
-                className="block text-[#dbd5c5] font-semibold mb-1"
-                style={{ fontFamily: "Inknut Antiqua" }}
-              >
-                Ticket Name
-              </label>
+        <div className="space-y-4">
+          <h2 className="text-xl font-semibold">Ticket Types</h2>
+          {tickets.map((ticket, i) => (
+            <div key={i} className="flex gap-2 items-center">
               <input
-                type="text"
+                placeholder="Ticket Name"
                 value={ticket.name}
-                onChange={(e) =>
-                  handleTicketChange(index, "name", e.target.value)
-                }
-                className="w-full rounded border bg-white border-gray-400 p-2 text-black"
+                onChange={(e) => handleTicketChange(i, "name", e.target.value)}
+                className="flex-1 p-2 border rounded"
               />
-            </div>
-            <div>
-              <label
-                className="block text-[#dbd5c5] font-semibold mb-1"
-                style={{ fontFamily: "Inknut Antiqua" }}
-              >
-                Price
-              </label>
               <input
                 type="number"
+                placeholder="Price"
                 value={ticket.isFree ? "" : ticket.price}
-                onChange={(e) =>
-                  handleTicketChange(index, "price", e.target.value)
-                }
+                onChange={(e) => handleTicketChange(i, "price", e.target.value)}
                 disabled={ticket.isFree}
-                className="w-full rounded border bg-white border-gray-400 p-2 text-black"
+                className="w-24 p-2 border rounded"
               />
-            </div>
-            <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
-              <label className="flex items-center space-x-2">
+              <label className="flex items-center gap-1">
                 <input
                   type="checkbox"
                   checked={ticket.isFree}
-                  onChange={() => handleTicketChange(index, "isFree")}
-                />
-                <span
-                  className="text-[#dbd5c5] font-semibold"
-                  style={{ fontFamily: "Inknut Antiqua" }}
-                >
-                  Free
-                </span>
+                  onChange={() => handleTicketChange(i, "isFree")}
+                />{" "}
+                Free
               </label>
               {tickets.length > 1 && (
                 <button
-                  onClick={() => removeTicket(index)}
-                  className="text-lg text-[#dbd5c5] hover:underline mt-2 md:mt-0"
-                  style={{ fontFamily: "Inknut Antiqua" }}
+                  type="button"
+                  onClick={() => removeTicket(i)}
+                  className="text-red-600"
                 >
-                  Remove
+                  🗑
                 </button>
               )}
             </div>
-          </div>
-        ))}
+          ))}
+          <button type="button" onClick={addTicket} className="text-blue-600">
+            + Add Ticket
+          </button>
+        </div>
 
-        <button
-          onClick={addTicket}
-          className="mt-4 rounded-full bg-[#BA7F7F] px-6 py-2 text-white font-semibold hover:bg-[#a16767] transition"
-          style={{ fontFamily: "Inknut Antiqua" }}
-        >
-          + Add Ticket Type
-        </button>
-      </div>
-
-      <div className="mx-auto mt-10 max-w-screen-lg px-4">
         <button
           type="submit"
-          onClick={handleSubmit}
-          className="w-full rounded-full bg-[#BA7F7F] px-6 py-3 font-bold text-white transition hover:bg-[#a16767]"
-          style={{ fontFamily: "Inknut Antiqua" }}
+          className="w-full bg-[#BA7F7F] text-white py-3 rounded hover:bg-[#a16767]"
         >
           Publish
         </button>
-      </div>
+      </form>
     </div>
   );
 }

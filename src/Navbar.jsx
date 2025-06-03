@@ -1,37 +1,32 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FaUserCircle } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
-import footer from "../src/assets/footer.png";
 
 function Navbar() {
   const [user, setUser] = useState(null);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
-  const dropdownRef = useRef(null);
 
   useEffect(() => {
     axios
       .get("http://localhost:5050/api/auth/me", { withCredentials: true })
       .then((res) => {
-        setUser(res.data.user);
+        console.log("✅ /api/auth/me success:", res.data); // Log raw response
+        setUser(res.data);
       })
-      .catch(() => {
+      .catch((err) => {
+        console.warn(
+          "⚠️ /api/auth/me failed:",
+          err?.response?.data || err.message
+        );
         setUser(null);
       });
   }, []);
 
-  // Close dropdown if clicked outside
   useEffect(() => {
-    function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setDropdownOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+    console.log("👤 Current user state:", user); // Log state on every change
+  }, [user]);
 
   const handleLogout = async () => {
     try {
@@ -54,10 +49,9 @@ function Navbar() {
         style={{ backgroundColor: "rgba(98, 8, 8, 0.6)" }}
       >
         <a
-          href="\"
+          href="#"
           className="flex items-center whitespace-nowrap text-4xl font-black ml-8"
         >
-          <img class="h-10 object-contain" src={footer} alt="" />
           <span
             className="text-[#dbd5c5]"
             style={{ fontFamily: "Inknut Antiqua" }}
@@ -112,11 +106,22 @@ function Navbar() {
               </a>
             </li>
 
-            {user ? (
+            {!user ? (
+              <li className="md:mr-4">
+                <Link to="/signin">
+                  <button
+                    className="rounded-md border-2 border-[#dbd5c5] px-6 py-1 font-medium text-[#dbd5c5] transition-colors hover:bg-[#FFE9C1] hover:text-[#a79066]"
+                    style={{ fontFamily: "Inknut Antiqua" }}
+                  >
+                    Log in
+                  </button>
+                </Link>
+              </li>
+            ) : (
               <>
                 <li className="md:mr-2">
                   <div
-                    className="flex items-center space-x-2 rounded-md border-2 border-[#dbd5c5] px-4 py-1 text-[#dbd5c5] transition-colors hover:bg-[#FFE9C1] hover:text-[#a79066]"
+                    className="flex items-center space-x-2 rounded-md border-2 border-[#dbd5c5] px-4 py-1 text-[#dbd5c5] transition-colors hover:bg-[#FFE9C1] hover:text-[#1d1c1c]"
                     style={{ fontFamily: "Inknut Antiqua" }}
                   >
                     <FaUserCircle className="text-xl" />
@@ -133,17 +138,6 @@ function Navbar() {
                   </button>
                 </li>
               </>
-            ) : (
-              <li className="md:mr-4">
-                <Link to="/signin">
-                  <button
-                    className="rounded-md border-2 border-[#dbd5c5] px-6 py-1 font-medium text-[#dbd5c5] transition-colors hover:bg-[#FFE9C1] hover:text-[#a79066]"
-                    style={{ fontFamily: "Inknut Antiqua" }}
-                  >
-                    Log in
-                  </button>
-                </Link>
-              </li>
             )}
           </ul>
         </nav>

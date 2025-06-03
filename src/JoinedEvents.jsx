@@ -4,7 +4,7 @@ import noEvents from "../src/assets/noEvents.png";
 
 function JoinedEvents() {
   const [events, setEvents] = useState([]);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  // const [sidebarOpen, setSidebarOpen] = useState(true);
 
   useEffect(() => {
     axios
