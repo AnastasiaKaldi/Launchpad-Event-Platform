@@ -5,7 +5,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App.jsx";
 import Homepage from "./Homepage.jsx";
 import EventsPage from "./EventsPage.jsx";
-import CreateEvent from "./Createevent.jsx";
+import CreateEvent from "./CreateEvent.jsx";
 import SignIn from "./SignIn.jsx";
 import SignUp from "./SignUp.jsx";
 import LandingPage from "./LoadingPage.jsx";
