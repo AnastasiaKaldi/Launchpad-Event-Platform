@@ -10,7 +10,9 @@ function ManageEvents() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5050/api/events/mine", { withCredentials: true })
+      .get("https://events-backend-urw2.onrender.com/api/events/mine", {
+        withCredentials: true,
+      })
       .then((res) => setEvents(res.data))
       .catch((err) => console.error("Error fetching events:", err));
   }, []);
@@ -24,9 +26,12 @@ function ManageEvents() {
     if (!confirmDelete) return;
 
     try {
-      await axios.delete(`http://localhost:5050/api/events/${eventId}`, {
-        withCredentials: true,
-      });
+      await axios.delete(
+        `https://events-backend-urw2.onrender.com/api/events/${eventId}`,
+        {
+          withCredentials: true,
+        }
+      );
 
       setEvents((prev) => prev.filter((e) => e.id !== eventId));
     } catch (err) {

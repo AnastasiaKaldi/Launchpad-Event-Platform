@@ -33,7 +33,9 @@ function OrgEvent() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5050/api/auth/me", { withCredentials: true })
+      .get("https://events-backend-urw2.onrender.com/api/auth/me", {
+        withCredentials: true,
+      })
       .then((res) => {
         console.log("✅ Authenticated user:", res.data);
         setLoading(false);
@@ -109,7 +111,7 @@ function OrgEvent() {
 
     try {
       const res = await axios.post(
-        "http://localhost:5050/api/events",
+        "https://events-backend-urw2.onrender.com/api/events",
         payload,
         {
           withCredentials: true,

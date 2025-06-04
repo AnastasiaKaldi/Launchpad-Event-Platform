@@ -17,7 +17,7 @@ function CreateEvent() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5050/api/auth/me")
+      .get("https://events-backend-urw2.onrender.com/api/auth/me")
       .then(() => setIsAuthenticated(true))
       .catch(() => setIsAuthenticated(false));
   }, []);

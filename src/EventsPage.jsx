@@ -45,7 +45,9 @@ const EventsPage = () => {
           })) || [];
 
         // Local Events
-        const localRes = await fetch("http://localhost:5050/api/events");
+        const localRes = await fetch(
+          "https://events-backend-urw2.onrender.com/api/events"
+        );
         const localData = await localRes.json();
 
         const localEvents = localData.map((e) => ({

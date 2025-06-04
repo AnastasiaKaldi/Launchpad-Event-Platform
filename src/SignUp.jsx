@@ -10,13 +10,16 @@ function SignUp() {
     e.preventDefault();
 
     try {
-      const res = await fetch("http://localhost:5050/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password, role: "user" }), // you can also add role selection later
-      });
+      const res = await fetch(
+        "https://events-backend-urw2.onrender.com/api/auth/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password, role: "user" }),
+        }
+      );
 
       const data = await res.json();
 

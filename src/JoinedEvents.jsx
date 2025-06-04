@@ -8,7 +8,9 @@ function JoinedEvents() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5050/api/events/joined", { withCredentials: true })
+      .get("https://events-backend-urw2.onrender.com/api/events/joined", {
+        withCredentials: true,
+      })
       .then((res) => setEvents(res.data))
       .catch((err) => console.error("Error fetching joined events:", err));
   }, []);
@@ -41,9 +43,12 @@ function JoinedEvents() {
     if (!confirmLeave) return;
 
     try {
-      await axios.delete(`http://localhost:5050/api/events/${eventId}/leave`, {
-        withCredentials: true,
-      });
+      await axios.delete(
+        `https://events-backend-urw2.onrender.com/api/events/${eventId}/leave`,
+        {
+          withCredentials: true,
+        }
+      );
 
       setEvents((prev) => prev.filter((e) => e.id !== eventId));
     } catch (err) {
