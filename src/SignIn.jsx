@@ -18,7 +18,7 @@ function SignIn() {
 
     try {
       const res = await fetch(
-        "https://events-backend-urw2.onrender.com/api/auth/login",
+        "https://events-backend-urw2.onrender.com/api/auth/signin",
         {
           method: "POST",
           headers: {
