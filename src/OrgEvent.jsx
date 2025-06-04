@@ -43,6 +43,9 @@ function OrgEvent() {
 
   const handleChange = async (e) => {
     const { name, value, files } = e.target;
+
+    console.log(`✏️ Changed: ${name} =`, files || value);
+
     if (files) {
       const images = await Promise.all(
         [...files].map((file) => {
@@ -68,37 +71,51 @@ function OrgEvent() {
     } else {
       updated[i][field] = value;
     }
+    console.log("🎟️ Tickets updated:", updated);
     setTickets(updated);
   };
 
-  const addTicket = () =>
-    setTickets([...tickets, { name: "", price: "", isFree: false }]);
-  const removeTicket = (i) => setTickets(tickets.filter((_, idx) => idx !== i));
+  const addTicket = () => {
+    const newTickets = [...tickets, { name: "", price: "", isFree: false }];
+    console.log("➕ Adding ticket:", newTickets);
+    setTickets(newTickets);
+  };
+
+  const removeTicket = (i) => {
+    const newTickets = tickets.filter((_, idx) => idx !== i);
+    console.log(`🗑 Removing ticket at index ${i}`, newTickets);
+    setTickets(newTickets);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const payload = {
+      ...formData,
+      title: formData.title || "Untitled Event",
+      summary: formData.summary || "No summary provided.",
+      datetime: formData.datetime || new Date().toISOString(),
+      location: formData.location || "Unknown location",
+      overview: formData.overview || "No overview.",
+      things_to_know: formData.things_to_know || "None",
+      category: formData.category || "General",
+      tickets:
+        tickets.length > 0
+          ? tickets
+          : [{ name: "General", price: "0", isFree: true }],
+    };
+
+    console.log("📤 Final payload to POST:", payload);
+
     try {
-      const payload = {
-        ...formData,
-        title: formData.title || "Untitled Event",
-        summary: formData.summary || "No summary provided.",
-        datetime: formData.datetime || new Date().toISOString(),
-        location: formData.location || "Unknown location",
-        overview: formData.overview || "No overview.",
-        things_to_know: formData.things_to_know || "None",
-        category: formData.category || "General",
-        tickets:
-          tickets.length > 0
-            ? tickets
-            : [{ name: "General", price: "0", isFree: true }],
-      };
-
-      console.log("📤 Submitting fallback payload:", payload);
-
-      await axios.post("http://localhost:5050/api/events", payload, {
-        withCredentials: true,
-      });
-
+      const res = await axios.post(
+        "http://localhost:5050/api/events",
+        payload,
+        {
+          withCredentials: true,
+        }
+      );
+      console.log("✅ Event creation response:", res.data);
       alert("✅ Event submitted!");
     } catch (err) {
       console.error("❌ Submission error:", err?.response?.data || err.message);
