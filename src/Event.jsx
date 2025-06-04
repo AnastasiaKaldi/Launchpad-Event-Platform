@@ -35,7 +35,10 @@ function Event() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5050/api/events/${id}`, { withCredentials: true })
+      .get(`https://events-backend-urw2.onrender.com/api/events/${id}`, {
+        withCredentials: true,
+      })
+      //https://events-backend-urw2.onrender.com
       .then((res) => {
         setEvent(res.data);
         const initialQuantities = {};

@@ -10,7 +10,9 @@ function Navbar() {
   const API = import.meta.env.VITE_API_URL;
   useEffect(() => {
     axios
-      .get(`${API}/api/auth/me`, { withCredentials: true })
+      .get(`https://events-backend-urw2.onrender.com/api/auth/me`, {
+        withCredentials: true,
+      })
       .then((res) => {
         console.log("✅ /api/auth/me success:", res.data); // Log raw response
         setUser(res.data);
