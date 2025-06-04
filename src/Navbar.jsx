@@ -7,10 +7,10 @@ import { FiLogOut } from "react-icons/fi";
 function Navbar() {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
-
+  const API = import.meta.env.VITE_API_URL;
   useEffect(() => {
     axios
-      .get("http://localhost:5050/api/auth/me", { withCredentials: true })
+      .get(`${API}/api/auth/me`, { withCredentials: true })
       .then((res) => {
         console.log("✅ /api/auth/me success:", res.data); // Log raw response
         setUser(res.data);
@@ -30,11 +30,7 @@ function Navbar() {
 
   const handleLogout = async () => {
     try {
-      await axios.post(
-        "http://localhost:5050/api/auth/logout",
-        {},
-        { withCredentials: true }
-      );
+      await axios.post(`${API}/api/auth/logout`, {}, { withCredentials: true });
       setUser(null);
       navigate("/");
     } catch (err) {
