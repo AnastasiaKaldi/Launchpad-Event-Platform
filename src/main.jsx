@@ -29,7 +29,7 @@ const router = createBrowserRouter([
       { path: "create", element: <CreateEvent /> },
       { path: "signin", element: <SignIn /> },
       { path: "signup", element: <SignUp /> },
-      { path: "event", element: <Event /> },
+      { path: "event/:id", element: <Event /> },
 
       { path: "checkout", element: <Checkout /> },
       { path: "footer", element: <Footer /> },
