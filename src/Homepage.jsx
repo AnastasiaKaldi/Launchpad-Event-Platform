@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import slide1 from "../src/assets/concert.jpg";
 import slide2 from "../src/assets/family.jpg";
 import slide3 from "../src/assets/restaurant.jpg";
@@ -7,19 +8,16 @@ const slides = [
   {
     image: slide1,
     headline: "Find the Best Concerts in Town",
-    buttonText: "View Events",
     link: "#events",
   },
   {
     image: slide2,
     headline: "Your ticket to unforgettable memories",
-    buttonText: "Browse Events",
     link: "#events",
   },
   {
     image: slide3,
     headline: "Eat your way through the Night",
-    buttonText: "See What’s On",
     link: "#events",
   },
 ];
@@ -48,19 +46,24 @@ const Homepage = () => {
             alt={`Slide ${index + 1}`}
             className="w-full h-screen object-cover"
           />
-          <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center text-center px-4">
-            <h2
-              className="text-4xl md:text-5xl text-[#dbd5c5] font-bold mb-6"
-              style={{ fontFamily: "Inknut Antiqua" }}
-            >
-              {slide.headline}
-            </h2>
-            <a href={slide.link}>
-              <button className="bg-[#B77F77] hover:bg-[#a06a6a] text-[#dbd5c5] px-6 py-3 text-lg font-semibold rounded shadow transition duration-300">
-                {slide.buttonText}
-              </button>
-            </a>
-          </div>
+          {index === current && (
+            <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center text-center px-4">
+              <motion.h2
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1.4, ease: "easeInOut" }}
+                className="text-4xl md:text-5xl text-[#dbd5c5] font-bold mb-6"
+                style={{ fontFamily: "Inknut Antiqua" }}
+              >
+                {slide.headline}
+              </motion.h2>
+              <a href={slide.link}>
+                <button className="bg-[#B77F77] hover:bg-[#a06a6a] text-[#dbd5c5] px-6 py-3 text-lg font-semibold rounded shadow transition duration-300">
+                  Explore Events
+                </button>
+              </a>
+            </div>
+          )}
         </div>
       ))}
     </div>

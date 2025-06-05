@@ -1,40 +1,17 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { motion } from "framer-motion";
 import noEvents from "../src/assets/noEvents.png";
 
 function JoinedEvents() {
   const [events, setEvents] = useState([]);
-  // const [sidebarOpen, setSidebarOpen] = useState(true);
 
   useEffect(() => {
     axios
-      .get("https://events-backend-urw2.onrender.com/api/events/joined", {
-        withCredentials: true,
-      })
+      .get("http://localhost:5050/api/events/joined", { withCredentials: true })
       .then((res) => setEvents(res.data))
       .catch((err) => console.error("Error fetching joined events:", err));
   }, []);
-
-  const generateGoogleCalendarLink = (event) => {
-    const start = new Date(event.datetime)
-      .toISOString()
-      .replace(/[-:]|\.\d{3}/g, "");
-    const end = new Date(
-      new Date(event.datetime).getTime() + 2 * 60 * 60 * 1000
-    )
-      .toISOString()
-      .replace(/[-:]|\.\d{3}/g, "");
-
-    const params = new URLSearchParams({
-      action: "TEMPLATE",
-      text: event.title,
-      dates: `${start}/${end}`,
-      details: event.summary || "",
-      location: event.location || "",
-    });
-
-    return `https://www.google.com/calendar/render?${params.toString()}`;
-  };
 
   const handleLeave = async (eventId) => {
     const confirmLeave = window.confirm(
@@ -43,13 +20,9 @@ function JoinedEvents() {
     if (!confirmLeave) return;
 
     try {
-      await axios.delete(
-        `https://events-backend-urw2.onrender.com/api/events/${eventId}/leave`,
-        {
-          withCredentials: true,
-        }
-      );
-
+      await axios.delete(`http://localhost:5050/api/events/${eventId}/leave`, {
+        withCredentials: true,
+      });
       setEvents((prev) => prev.filter((e) => e.id !== eventId));
     } catch (err) {
       console.error("Failed to leave event:", err);
@@ -57,66 +30,104 @@ function JoinedEvents() {
     }
   };
 
+  const generateGoogleCalendarLink = (event) => {
+    const title = encodeURIComponent(event.title);
+    const details = encodeURIComponent(event.summary || "No description");
+    const location = encodeURIComponent(event.location || "Online");
+
+    const startDate = new Date(event.datetime);
+    const endDate = new Date(startDate.getTime() + 60 * 60 * 1000); // 1 hour duration
+
+    const formatDate = (date) =>
+      date
+        .toISOString()
+        .replace(/-|:|\.\d\d\d/g, "")
+        .slice(0, 15) + "Z";
+
+    const start = formatDate(startDate);
+    const end = formatDate(endDate);
+
+    return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${start}/${end}&details=${details}&location=${location}`;
+  };
+
   return (
-    <div className="min-h-screen bg-[#dbd5c5] px-4 sm:px-6 pt-24 pb-12">
-      {/* Mobile icons */}
-      <div className="sm:hidden flex justify-center gap-6 mb-6"></div>
+    <section
+      id="joined-events"
+      className="min-h-screen px-6 pt-28 pb-12 bg-gradient-to-br from-pink-50 via-white to-pink-100"
+    >
+      <div className="mb-10 text-center">
+        <h2
+          className="text-4xl font-extrabold text-[#620808]"
+          style={{ fontFamily: "Inknut Antiqua" }}
+        >
+          Events You’ve Joined
+        </h2>
+      </div>
 
-      <main className="ml-0 sm:ml-0 w-full px-4 sm:px-6">
-        <div className="max-w-5xl mx-auto text-center">
-          <div className="mb-8">
-            <h1
-              className="text-3xl sm:text-4xl font-bold text-[#620808]"
-              style={{ fontFamily: "Inknut Antiqua" }}
-            >
-              Events You've Joined
-            </h1>
-          </div>
-
-          {events.length === 0 ? (
-            <div
-              className="text-center text-[#620808] mt-10"
-              style={{ fontFamily: "Inknut Antiqua" }}
-            >
-              <img
-                src={noEvents}
-                alt="No events"
-                className="mx-auto mb-4 w-20 h-20"
-              />
-              <p>You haven’t joined any events yet.</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-center">
-              {events.map((event) => (
-                <div key={event.id} className="bg-white shadow p-4 rounded-lg">
-                  <h2 className="text-xl font-semibold">{event.title}</h2>
-                  <p className="text-sm text-gray-600 mb-1">
-                    {new Date(event.datetime).toLocaleString()}
-                  </p>
-                  <p className="text-gray-700 mb-3">{event.summary}</p>
-
-                  <a
-                    href={generateGoogleCalendarLink(event)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 underline block mb-2"
-                  >
-                    📅 Add to Google Calendar
-                  </a>
-
-                  <button
-                    onClick={() => handleLeave(event.id)}
-                    className="text-red-600 hover:underline"
-                  >
-                    Leave Event
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
+      {events.length === 0 ? (
+        <div
+          className="flex flex-col items-center mt-20 text-[#620808]"
+          style={{ fontFamily: "Inknut Antiqua" }}
+        >
+          <img src={noEvents} alt="No events" className="w-28 h-28 mb-4" />
+          <p className="text-xl">You haven’t joined any events yet.</p>
         </div>
-      </main>
-    </div>
+      ) : (
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {events.map((event, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+              className="rounded-lg overflow-hidden shadow-xl bg-white/60 backdrop-blur-sm border border-white/20 hover:shadow-2xl transition duration-300 hover:scale-[1.02]"
+            >
+              <div className="h-48 w-full overflow-hidden">
+                <img
+                  src={event.image_url || event.images?.[0] || noEvents}
+                  alt={event.title}
+                  className="w-full h-full object-cover object-center transition-transform duration-300 hover:scale-110"
+                />
+              </div>
+              <div className="p-5 space-y-3">
+                <span className="text-sm text-gray-500 block">
+                  {new Date(event.datetime).toLocaleDateString()}
+                </span>
+                <h3
+                  className="text-xl font-bold text-[#620808]"
+                  style={{ fontFamily: "Inknut Antiqua" }}
+                >
+                  {event.title}
+                </h3>
+                <p
+                  className="text-gray-600 text-sm"
+                  style={{ fontFamily: "Inknut Antiqua" }}
+                >
+                  {event.summary || "No description provided."}
+                </p>
+                <button
+                  onClick={() => handleLeave(event.id)}
+                  className="inline-block mt-2 text-red-500 hover:text-red-700 text-sm font-medium transition"
+                  style={{ fontFamily: "Inknut Antiqua" }}
+                >
+                  Leave Event
+                </button>
+                <a
+                  href={generateGoogleCalendarLink(event)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block ml-4 text-blue-600 hover:text-blue-800 text-sm font-medium transition"
+                  style={{ fontFamily: "Inknut Antiqua" }}
+                >
+                  Add to Google Calendar
+                </a>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      )}
+    </section>
   );
 }
 

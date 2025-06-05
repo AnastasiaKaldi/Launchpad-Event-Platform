@@ -34,7 +34,7 @@ function OrgEvent() {
 
   useEffect(() => {
     axios
-      .get("https://events-backend-urw2.onrender.com/api/auth/me", {
+      .get("http://localhost:5050/api/auth/me", {
         withCredentials: true,
       })
       .then((res) => {
@@ -46,9 +46,6 @@ function OrgEvent() {
 
   const handleChange = async (e) => {
     const { name, value, files } = e.target;
-
-    console.log(`✏️ Changed: ${name} =`, files || value);
-
     if (files) {
       const images = await Promise.all(
         [...files].map((file) => {
@@ -59,7 +56,6 @@ function OrgEvent() {
           });
         })
       );
-      console.log("📸 Uploaded images:", images);
       setFormData((prev) => ({ ...prev, images }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
@@ -74,25 +70,19 @@ function OrgEvent() {
     } else {
       updated[i][field] = value;
     }
-    console.log("🎟️ Tickets updated:", updated);
     setTickets(updated);
   };
 
   const addTicket = () => {
-    const newTickets = [...tickets, { name: "", price: "", isFree: false }];
-    console.log("➕ Adding ticket:", newTickets);
-    setTickets(newTickets);
+    setTickets([...tickets, { name: "", price: "", isFree: false }]);
   };
 
   const removeTicket = (i) => {
-    const newTickets = tickets.filter((_, idx) => idx !== i);
-    console.log(`🗑 Removing ticket at index ${i}`, newTickets);
-    setTickets(newTickets);
+    setTickets(tickets.filter((_, idx) => idx !== i));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const errors = {};
     if (!formData.title) errors.title = "Title is required";
     if (!formData.summary) errors.summary = "Summary is required";
@@ -115,13 +105,13 @@ function OrgEvent() {
     };
     try {
       const res = await axios.post(
-        "https://events-backend-urw2.onrender.com/api/events",
+        "http://localhost:5050/api/events",
         payload,
         {
           withCredentials: true,
         }
       );
-      console.log("✅ Event creation response:", res.data);
+      console.error(res);
       alert("✅ Event submitted!");
     } catch (err) {
       console.error("Error submitting event:", err);
@@ -133,21 +123,19 @@ function OrgEvent() {
 
   return (
     <div className="bg-[#dbd5c5] min-h-screen py-10 px-6">
-      <div className="text-center relative mb-12">
-        <img
-          src={org}
-          alt="Header"
-          className="w-full h-60 object-cover rounded-xl"
-        />
-        <div className="absolute inset-0 bg-[#BA7F7F]/80 flex flex-col justify-center items-center text-[#dbd5c5]">
-          <h1 className="text-4xl font-bold">Create an Event</h1>
-          <p>Share your event with the world!</p>
+      <div className="text-center mb-12 rounded-xl">
+        <div className="relative max-w-7xl mx-auto ">
+          <img src={org} alt="Header" className="w-full h-60 object-cover" />
+          <div className="absolute inset-0 bg-[#BA7F7F]/80 flex flex-col justify-center items-center text-[#dbd5c5]">
+            <h1 className="text-4xl font-bold">Create an Event</h1>
+            <p>Share your event with the world!</p>
+          </div>
         </div>
       </div>
 
       <form
         onSubmit={handleSubmit}
-        className="space-y-6 max-w-3xl mx-auto"
+        className="space-y-6 max-w-3xl mx-auto rounded-md"
         aria-labelledby="form-title"
       >
         <h2 id="form-title" className="sr-only">
@@ -170,7 +158,11 @@ function OrgEvent() {
           .split(" ")
           .map((field) => (
             <div key={field}>
-              <label htmlFor={field} className="sr-only">
+              <label
+                htmlFor={field}
+                className="block text-lg text-[#620808] font-medium mb-1"
+                style={{ fontFamily: "Inknut Antiqua" }}
+              >
                 {field
                   .replace(/_/g, " ")
                   .replace(/\b\w/g, (l) => l.toUpperCase())}
@@ -198,7 +190,11 @@ function OrgEvent() {
           ))}
 
         <div>
-          <label htmlFor="datetime" className="sr-only">
+          <label
+            htmlFor="datetime"
+            className="block text-lg  text-[#620808] font-medium mb-1"
+            style={{ fontFamily: "Inknut Antiqua" }}
+          >
             Event Date and Time
           </label>
           <input
@@ -221,7 +217,11 @@ function OrgEvent() {
         </div>
 
         <div>
-          <label htmlFor="category" className="sr-only">
+          <label
+            htmlFor="category"
+            className="block text-lg text-[#620808] font-medium mb-1"
+            style={{ fontFamily: "Inknut Antiqua" }}
+          >
             Event Category
           </label>
           <select
@@ -238,11 +238,20 @@ function OrgEvent() {
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-xl font-semibold">Ticket Types</h2>
+          <h2
+            className="text-xl text-[#620808] font-semibold "
+            style={{ fontFamily: "Inknut Antiqua" }}
+          >
+            Ticket Types
+          </h2>
           {tickets.map((ticket, i) => (
             <div key={i} className="flex gap-2 items-center">
               <div>
-                <label htmlFor={`ticket-name-${i}`} className="sr-only">
+                <label
+                  htmlFor={`ticket-name-${i}`}
+                  className="block text-sm text-[#620808] font-medium mb-1"
+                  style={{ fontFamily: "Inknut Antiqua" }}
+                >
                   Ticket Name
                 </label>
                 <input
@@ -268,7 +277,11 @@ function OrgEvent() {
                 )}
               </div>
               <div>
-                <label htmlFor={`ticket-price-${i}`} className="sr-only">
+                <label
+                  htmlFor={`ticket-price-${i}`}
+                  className="block text-sm font-medium  text-[#620808] mb-1"
+                  style={{ fontFamily: "Inknut Antiqua" }}
+                >
                   Ticket Price
                 </label>
                 <input
@@ -295,7 +308,10 @@ function OrgEvent() {
                   </p>
                 )}
               </div>
-              <label className="flex items-center gap-1">
+              <label
+                className="flex items-center text-[#620808] gap-1"
+                style={{ fontFamily: "Inknut Antiqua" }}
+              >
                 <input
                   type="checkbox"
                   checked={ticket.isFree}

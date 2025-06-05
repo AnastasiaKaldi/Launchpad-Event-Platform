@@ -35,7 +35,7 @@ const router = createBrowserRouter([
       { path: "footer", element: <Footer /> },
       { path: "orgevent", element: <OrgEvent /> },
       { path: "manage", element: <Manage /> },
-      { path: "joined", element: <JoinedEvents /> },
+      { path: "myevents", element: <JoinedEvents /> },
     ],
   },
 ]);

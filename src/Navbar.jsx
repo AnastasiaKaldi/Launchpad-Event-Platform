@@ -3,18 +3,20 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FaUserCircle } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
+import { motion } from "framer-motion";
 
 function Navbar() {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
   const API = import.meta.env.VITE_API_URL;
+
   useEffect(() => {
     axios
-      .get(`https://events-backend-urw2.onrender.com/api/auth/me`, {
+      .get(`http://localhost:5050/api/auth/me`, {
         withCredentials: true,
       })
       .then((res) => {
-        console.log("✅ /api/auth/me success:", res.data); // Log raw response
+        console.log("✅ /api/auth/me success:", res.data);
         setUser(res.data);
       })
       .catch((err) => {
@@ -27,7 +29,7 @@ function Navbar() {
   }, []);
 
   useEffect(() => {
-    console.log("👤 Current user state:", user); // Log state on every change
+    console.log("👤 Current user state:", user);
   }, [user]);
 
   const handleLogout = async () => {
@@ -41,21 +43,28 @@ function Navbar() {
   };
 
   return (
-    <header className="absolute top-0 left-0 w-full z-50">
+    <motion.header
+      initial={{ y: -80, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 1, ease: "easeOut" }}
+      className="absolute top-0 left-0 w-full z-50"
+    >
       <div
         className="relative flex w-full flex-col overflow-hidden px-4 py-2 md:flex-row md:items-center"
         style={{ backgroundColor: "rgba(98, 8, 8, 0.6)" }}
       >
         <a
-          href="#"
+          href="\"
           className="flex items-center whitespace-nowrap text-4xl font-black ml-8"
         >
-          <span
+          <motion.span
+            whileHover={{ scale: 1.1, rotate: [0, 2, -2, 0] }}
+            transition={{ duration: 0.5 }}
             className="text-[#dbd5c5]"
             style={{ fontFamily: "Inknut Antiqua" }}
           >
             Eventino
-          </span>
+          </motion.span>
         </a>
 
         <input type="checkbox" className="peer hidden" id="navbar-open" />
@@ -94,16 +103,28 @@ function Navbar() {
                 Events
               </Link>
             </li>
-            <li className="md:mr-12">
-              <Link
-                to={{ pathname: "/", hash: "#create-events" }}
-                className="text-[#dbd5c5] hover:text-[#a79066] visited:text-[#dbd5c5]"
-                style={{ fontFamily: "Inknut Antiqua" }}
-              >
-                Create Events
-              </Link>
-            </li>
-
+            {user?.role === "staff" && (
+              <li className="md:mr-12">
+                <Link
+                  to="/manage"
+                  className="text-[#dbd5c5] hover:text-[#a79066] visited:text-[#dbd5c5]"
+                  style={{ fontFamily: "Inknut Antiqua" }}
+                >
+                  Dashboard
+                </Link>
+              </li>
+            )}
+            {user?.role === "user" && (
+              <li className="md:mr-12">
+                <Link
+                  to="/myevents"
+                  className="text-[#dbd5c5] hover:text-[#a79066] visited:text-[#dbd5c5]"
+                  style={{ fontFamily: "Inknut Antiqua" }}
+                >
+                  My Events
+                </Link>
+              </li>
+            )}
             {!user ? (
               <li className="md:mr-4">
                 <Link to="/signin">
@@ -118,13 +139,16 @@ function Navbar() {
             ) : (
               <>
                 <li className="md:mr-2">
-                  <div
+                  <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.5 }}
                     className="flex items-center space-x-2 rounded-md border-2 border-[#dbd5c5] px-4 py-1 text-[#dbd5c5] transition-colors hover:bg-[#FFE9C1] hover:text-[#1d1c1c]"
                     style={{ fontFamily: "Inknut Antiqua" }}
                   >
                     <FaUserCircle className="text-xl" />
                     <span>Welcome, {user.role}</span>
-                  </div>
+                  </motion.div>
                 </li>
                 <li>
                   <button
@@ -140,7 +164,7 @@ function Navbar() {
           </ul>
         </nav>
       </div>
-    </header>
+    </motion.header>
   );
 }
 
