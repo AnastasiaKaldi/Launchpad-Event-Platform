@@ -27,6 +27,7 @@ function OrgEvent() {
     category: CATEGORIES[0],
     images: [],
   });
+  const [formErrors, setFormErrors] = useState({});
   const [tickets, setTickets] = useState([
     { name: "", price: "", isFree: false },
   ]);
@@ -92,23 +93,26 @@ function OrgEvent() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const errors = {};
+    if (!formData.title) errors.title = "Title is required";
+    if (!formData.summary) errors.summary = "Summary is required";
+    if (!formData.datetime) errors.datetime = "Date & time is required";
+    if (!formData.location) errors.location = "Location is required";
+    if (!formData.overview) errors.overview = "Overview is required";
+    tickets.forEach((t, idx) => {
+      if (!t.name) errors[`ticket-${idx}-name`] = "Ticket name required";
+      if (!t.isFree && !t.price)
+        errors[`ticket-${idx}-price`] = "Ticket price required";
+    });
+    if (Object.keys(errors).length) {
+      setFormErrors(errors);
+      return;
+    }
+    setFormErrors({});
     const payload = {
       ...formData,
-      title: formData.title || "Untitled Event",
-      summary: formData.summary || "No summary provided.",
-      datetime: formData.datetime || new Date().toISOString(),
-      location: formData.location || "Unknown location",
-      overview: formData.overview || "No overview.",
-      things_to_know: formData.things_to_know || "None",
-      category: formData.category || "General",
-      tickets:
-        tickets.length > 0
-          ? tickets
-          : [{ name: "General", price: "0", isFree: true }],
+      tickets,
     };
-
-    console.log("📤 Final payload to POST:", payload);
-
     try {
       const res = await axios.post(
         "https://events-backend-urw2.onrender.com/api/events",
@@ -120,7 +124,7 @@ function OrgEvent() {
       console.log("✅ Event creation response:", res.data);
       alert("✅ Event submitted!");
     } catch (err) {
-      console.error("❌ Submission error:", err?.response?.data || err.message);
+      console.error("Error submitting event:", err);
       alert("❌ Failed to submit event");
     }
   };
@@ -141,7 +145,15 @@ function OrgEvent() {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6 max-w-3xl mx-auto">
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-6 max-w-3xl mx-auto"
+        aria-labelledby="form-title"
+      >
+        <h2 id="form-title" className="sr-only">
+          Event Creation Form
+        </h2>
+
         <label className="block text-center bg-[#BA7F7F] p-6 rounded-lg cursor-pointer text-[#dbd5c5]">
           <img src={upload} alt="Upload" className="mx-auto w-8 h-8" />
           Upload Images
@@ -154,64 +166,141 @@ function OrgEvent() {
           />
         </label>
 
-        {["title", "summary", "location", "overview", "things_to_know"].map(
-          (field) => (
-            <input
-              key={field}
-              name={field}
-              value={formData[field]}
-              onChange={handleChange}
-              placeholder={field
-                .replace(/_/g, " ")
-                .replace(/\b\w/g, (l) => l.toUpperCase())}
-              className="w-full p-2 border rounded"
-            />
-          )
-        )}
-
-        <input
-          type="datetime-local"
-          name="datetime"
-          value={formData.datetime}
-          onChange={handleChange}
-          className="w-full p-2 border rounded"
-        />
-
-        <select
-          name="category"
-          value={formData.category}
-          onChange={handleChange}
-          className="w-full p-2 border rounded"
-        >
-          {CATEGORIES.map((cat) => (
-            <option key={cat}>{cat}</option>
+        {"title summary location overview things_to_know"
+          .split(" ")
+          .map((field) => (
+            <div key={field}>
+              <label htmlFor={field} className="sr-only">
+                {field
+                  .replace(/_/g, " ")
+                  .replace(/\b\w/g, (l) => l.toUpperCase())}
+              </label>
+              <input
+                id={field}
+                name={field}
+                value={formData[field]}
+                onChange={handleChange}
+                placeholder={field
+                  .replace(/_/g, " ")
+                  .replace(/\b\w/g, (l) => l.toUpperCase())}
+                className={`w-full p-2 border rounded ${
+                  formErrors[field] ? "border-red-500" : ""
+                }`}
+                aria-invalid={!!formErrors[field]}
+                aria-describedby={`error-${field}`}
+              />
+              {formErrors[field] && (
+                <p id={`error-${field}`} className="text-red-500 text-sm">
+                  {formErrors[field]}
+                </p>
+              )}
+            </div>
           ))}
-        </select>
+
+        <div>
+          <label htmlFor="datetime" className="sr-only">
+            Event Date and Time
+          </label>
+          <input
+            type="datetime-local"
+            id="datetime"
+            name="datetime"
+            value={formData.datetime}
+            onChange={handleChange}
+            className={`w-full p-2 border rounded ${
+              formErrors.datetime ? "border-red-500" : ""
+            }`}
+            aria-invalid={!!formErrors.datetime}
+            aria-describedby="error-datetime"
+          />
+          {formErrors.datetime && (
+            <p id="error-datetime" className="text-red-500 text-sm">
+              {formErrors.datetime}
+            </p>
+          )}
+        </div>
+
+        <div>
+          <label htmlFor="category" className="sr-only">
+            Event Category
+          </label>
+          <select
+            id="category"
+            name="category"
+            value={formData.category}
+            onChange={handleChange}
+            className="w-full p-2 border rounded"
+          >
+            {CATEGORIES.map((cat) => (
+              <option key={cat}>{cat}</option>
+            ))}
+          </select>
+        </div>
 
         <div className="space-y-4">
           <h2 className="text-xl font-semibold">Ticket Types</h2>
           {tickets.map((ticket, i) => (
             <div key={i} className="flex gap-2 items-center">
-              <input
-                placeholder="Ticket Name"
-                value={ticket.name}
-                onChange={(e) => handleTicketChange(i, "name", e.target.value)}
-                className="flex-1 p-2 border rounded"
-              />
-              <input
-                type="number"
-                placeholder="Price"
-                value={ticket.isFree ? "" : ticket.price}
-                onChange={(e) => handleTicketChange(i, "price", e.target.value)}
-                disabled={ticket.isFree}
-                className="w-24 p-2 border rounded"
-              />
+              <div>
+                <label htmlFor={`ticket-name-${i}`} className="sr-only">
+                  Ticket Name
+                </label>
+                <input
+                  id={`ticket-name-${i}`}
+                  placeholder="Ticket Name"
+                  value={ticket.name}
+                  onChange={(e) =>
+                    handleTicketChange(i, "name", e.target.value)
+                  }
+                  className={`flex-1 p-2 border rounded ${
+                    formErrors[`ticket-${i}-name`] ? "border-red-500" : ""
+                  }`}
+                  aria-invalid={!!formErrors[`ticket-${i}-name`]}
+                  aria-describedby={`error-ticket-${i}-name`}
+                />
+                {formErrors[`ticket-${i}-name`] && (
+                  <p
+                    id={`error-ticket-${i}-name`}
+                    className="text-red-500 text-sm"
+                  >
+                    {formErrors[`ticket-${i}-name`]}
+                  </p>
+                )}
+              </div>
+              <div>
+                <label htmlFor={`ticket-price-${i}`} className="sr-only">
+                  Ticket Price
+                </label>
+                <input
+                  id={`ticket-price-${i}`}
+                  type="number"
+                  placeholder="Price"
+                  value={ticket.isFree ? "" : ticket.price}
+                  onChange={(e) =>
+                    handleTicketChange(i, "price", e.target.value)
+                  }
+                  disabled={ticket.isFree}
+                  className={`w-24 p-2 border rounded ${
+                    formErrors[`ticket-${i}-price`] ? "border-red-500" : ""
+                  }`}
+                  aria-invalid={!!formErrors[`ticket-${i}-price`]}
+                  aria-describedby={`error-ticket-${i}-price`}
+                />
+                {formErrors[`ticket-${i}-price`] && (
+                  <p
+                    id={`error-ticket-${i}-price`}
+                    className="text-red-500 text-sm"
+                  >
+                    {formErrors[`ticket-${i}-price`]}
+                  </p>
+                )}
+              </div>
               <label className="flex items-center gap-1">
                 <input
                   type="checkbox"
                   checked={ticket.isFree}
                   onChange={() => handleTicketChange(i, "isFree")}
-                />{" "}
+                />
                 Free
               </label>
               {tickets.length > 1 && (
