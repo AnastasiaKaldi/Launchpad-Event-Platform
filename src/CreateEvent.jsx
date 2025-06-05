@@ -14,10 +14,11 @@ axios.defaults.withCredentials = true;
 function CreateEvent() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
+  const API = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     axios
-      .get("http://localhost:5050/api/auth/me")
+      .get(`${API}/api/auth/me`, { withCredentials: true })
       .then(() => setIsAuthenticated(true))
       .catch(() => setIsAuthenticated(false));
   }, []);

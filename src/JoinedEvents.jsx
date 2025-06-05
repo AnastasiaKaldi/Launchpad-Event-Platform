@@ -5,10 +5,11 @@ import noEvents from "../src/assets/noEvents.png";
 
 function JoinedEvents() {
   const [events, setEvents] = useState([]);
+  const API = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     axios
-      .get("http://localhost:5050/api/events/joined", { withCredentials: true })
+      .get(`${API}/api/events/joined`, { withCredentials: true })
       .then((res) => setEvents(res.data))
       .catch((err) => console.error("Error fetching joined events:", err));
   }, []);
@@ -20,7 +21,7 @@ function JoinedEvents() {
     if (!confirmLeave) return;
 
     try {
-      await axios.delete(`http://localhost:5050/api/events/${eventId}/leave`, {
+      await axios.delete(`${API}/api/events/${eventId}/leave`, {
         withCredentials: true,
       });
       setEvents((prev) => prev.filter((e) => e.id !== eventId));

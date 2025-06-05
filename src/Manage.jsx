@@ -7,10 +7,11 @@ import noEvents from "../src/assets/noEvents.png";
 function ManageEvents() {
   const [events, setEvents] = useState([]);
   const navigate = useNavigate();
+  const API = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     axios
-      .get("http://localhost:5050/api/events/mine", {
+      .get(`${API}/api/events/mine`, {
         withCredentials: true,
       })
       .then((res) => setEvents(res.data))
@@ -26,7 +27,7 @@ function ManageEvents() {
     if (!confirmDelete) return;
 
     try {
-      await axios.delete(`http://localhost:5050/api/events/${eventId}`, {
+      await axios.delete(`${API}/api/events/${eventId}`, {
         withCredentials: true,
       });
 

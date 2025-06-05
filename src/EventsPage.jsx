@@ -43,7 +43,13 @@ const EventsPage = () => {
             url: e.url || "#",
           })) || [];
 
-        const localRes = await fetch("http://localhost:5050/api/events");
+        const localRes = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/events`,
+          {
+            credentials: "include",
+          }
+        );
+
         const localData = await localRes.json();
 
         const localEvents = localData.map((e) => ({
@@ -82,7 +88,7 @@ const EventsPage = () => {
       : events;
 
   return (
-    <section className="bg-[#dbd5c5] py-10 min-h-screen">
+    <section className="bg-[#dbd5c5] py-10 min-h-screen" id="events">
       <div className="max-w-[75%] mx-auto px-4">
         <div className="mb-10 flex flex-wrap justify-center gap-4 md:gap-6">
           {filterOptions.map((option, index) => (

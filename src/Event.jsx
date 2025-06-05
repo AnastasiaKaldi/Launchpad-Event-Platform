@@ -35,10 +35,11 @@ function Event() {
   const [joinLoading, setJoinLoading] = useState(false);
   const [joinMessage, setJoinMessage] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const API = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5050/api/events/${id}`, {
+      .get(`${API}/api/events/${id}`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -79,8 +80,9 @@ function Event() {
     try {
       setJoinLoading(true);
       setJoinMessage("");
+      const API = import.meta.env.VITE_API_URL;
       const res = await axios.post(
-        `http://localhost:5050/api/events/${id}/join`,
+        `${API}/api/events/${id}/join`,
         {},
         { withCredentials: true }
       );

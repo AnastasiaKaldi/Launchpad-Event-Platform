@@ -12,7 +12,7 @@ function Navbar() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5050/api/auth/me`, {
+      .get(`${API}/api/auth/me`, {
         withCredentials: true,
       })
       .then((res) => {

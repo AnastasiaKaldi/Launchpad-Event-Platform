@@ -33,8 +33,9 @@ function OrgEvent() {
   ]);
 
   useEffect(() => {
+    const API = import.meta.env.VITE_API_URL;
     axios
-      .get("http://localhost:5050/api/auth/me", {
+      .get(`${API}/api/auth/me`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -104,13 +105,10 @@ function OrgEvent() {
       tickets,
     };
     try {
-      const res = await axios.post(
-        "http://localhost:5050/api/events",
-        payload,
-        {
-          withCredentials: true,
-        }
-      );
+      const API = import.meta.env.VITE_API_URL;
+      const res = await axios.post(`${API}/api/events`, payload, {
+        withCredentials: true,
+      });
       console.error(res);
       alert("✅ Event submitted!");
     } catch (err) {
