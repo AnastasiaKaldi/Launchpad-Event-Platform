@@ -35,11 +35,12 @@ function OrgEvent() {
   useEffect(() => {
     const API = import.meta.env.VITE_API_URL;
     axios
-      .get(`${API}/api/auth/me`, {
-        withCredentials: true,
-      })
+      .get(`${API}/api/auth/me`, { withCredentials: true })
       .then((res) => {
-        console.log("✅ Authenticated user:", res.data);
+        if (res.data.role !== "staff") {
+          alert("🚫 You are not authorized to access this page.");
+          return navigate("/");
+        }
         setLoading(false);
       })
       .catch(() => navigate("/signin"));

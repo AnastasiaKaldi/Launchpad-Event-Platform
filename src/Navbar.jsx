@@ -147,7 +147,7 @@ function Navbar() {
                     style={{ fontFamily: "Inknut Antiqua" }}
                   >
                     <FaUserCircle className="text-xl" />
-                    <span>Welcome, {user.role}</span>
+                    <span>Welcome, {user.first_name}</span>
                   </motion.div>
                 </li>
                 <li>
