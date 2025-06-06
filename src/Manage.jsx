@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { motion } from "framer-motion";
 import noEvents from "../src/assets/noEvents.png";
+import fallbackImage from "../src/assets/fallbackImage.webp";
 
 function ManageEvents() {
   const [events, setEvents] = useState([]);
@@ -92,6 +93,11 @@ function ManageEvents() {
                     transition={{ duration: 0.4 }}
                     className="border p-4 rounded shadow bg-white"
                   >
+                    <img
+                      src={event.image_url || fallbackImage}
+                      alt={event.title}
+                      className="w-full h-48 object-cover rounded mb-2"
+                    />
                     <h2 className="text-xl font-semibold">{event.title}</h2>
                     <p className="text-sm text-gray-600">
                       {new Date(event.datetime).toLocaleString()}
