@@ -36,7 +36,6 @@ function EditEvent() {
     { name: "", price: "", isFree: false },
   ]);
 
-  // Fetch event data
   useEffect(() => {
     axios
       .get(`${API}/api/events/${id}`)

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -16,21 +17,14 @@ function Navbar() {
         withCredentials: true,
       })
       .then((res) => {
-        console.log("✅ /api/auth/me success:", res.data);
         setUser(res.data);
       })
       .catch((err) => {
-        console.warn(
-          "⚠️ /api/auth/me failed:",
-          err?.response?.data || err.message
-        );
         setUser(null);
       });
   }, []);
 
-  useEffect(() => {
-    console.log("👤 Current user state:", user);
-  }, [user]);
+  useEffect(() => {}, [user]);
 
   const handleLogout = async () => {
     try {

@@ -5,7 +5,6 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App.jsx";
 import Homepage from "./Homepage.jsx";
 import EventsPage from "./EventsPage.jsx";
-import CreateEvent from "./CreateEvent.jsx";
 import SignIn from "./SignIn.jsx";
 import SignUp from "./SignUp.jsx";
 import LandingPage from "./LoadingPage.jsx";
@@ -22,12 +21,11 @@ import "./index.css";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />, // App contains Navbar and acts as layout
+    element: <App />,
     children: [
       { path: "", element: <LandingPage /> },
       { path: "", element: <Homepage /> },
       { path: "events", element: <EventsPage /> },
-      { path: "create", element: <CreateEvent /> },
       { path: "signin", element: <SignIn /> },
       { path: "signup", element: <SignUp /> },
       { path: "event/:id", element: <Event /> },

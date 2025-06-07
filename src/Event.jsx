@@ -52,7 +52,6 @@ function Event() {
         setIsAuthenticated(true);
       })
       .catch((err) => {
-        console.error("❌ Fetch error:", err);
         if (err.response?.status === 401) {
           setIsAuthenticated(false);
         }
@@ -90,7 +89,6 @@ function Event() {
       setJoined(true);
       setJoinMessage("You’ve joined this event! 🎉");
     } catch (err) {
-      console.error("❌ Error joining event:", err);
       if (err.response?.status === 401) {
         setJoinMessage("🔐 Please [log in](/signin) to join this event.");
       } else {

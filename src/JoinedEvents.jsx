@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
@@ -37,7 +38,7 @@ function JoinedEvents() {
     const location = encodeURIComponent(event.location || "Online");
 
     const startDate = new Date(event.datetime);
-    const endDate = new Date(startDate.getTime() + 60 * 60 * 1000); // 1 hour duration
+    const endDate = new Date(startDate.getTime() + 60 * 60 * 1000);
 
     const formatDate = (date) =>
       date

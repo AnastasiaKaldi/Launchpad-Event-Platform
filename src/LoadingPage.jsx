@@ -3,7 +3,6 @@ import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import Homepage from "./Homepage";
 import EventsPage from "./EventsPage";
-// import CreateEvent from "../src/CreateEvent";
 import Footer from "./Footer";
 
 const LandingPage = () => {
@@ -24,7 +23,6 @@ const LandingPage = () => {
     <div className="overflow-x-hidden bg-[#dbd5c5]">
       <Homepage />
       <EventsPage />
-      {/* <CreateEvent /> */}
       <Footer />
     </div>
   );
