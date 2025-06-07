@@ -9,7 +9,6 @@ import SignIn from "./SignIn.jsx";
 import SignUp from "./SignUp.jsx";
 import LandingPage from "./LoadingPage.jsx";
 import Event from "./Event.jsx";
-import Checkout from "./Checkout.jsx";
 import OrgEvent from "./OrgEvent.jsx";
 import Footer from "./Footer.jsx";
 import Manage from "./Manage.jsx";
@@ -30,7 +29,6 @@ const router = createBrowserRouter([
       { path: "signup", element: <SignUp /> },
       { path: "event/:id", element: <Event /> },
 
-      { path: "checkout", element: <Checkout /> },
       { path: "footer", element: <Footer /> },
       { path: "orgevent", element: <OrgEvent /> },
       { path: "manage", element: <Manage /> },

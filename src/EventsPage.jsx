@@ -11,15 +11,15 @@ import festival from "../src/assets/decoration.png";
 import familyEvent from "../src/assets/familyEvent.png";
 
 const filterOptions = [
-  { label: "Music", image: music },
-  { label: "Nightlife", image: nightlife },
-  { label: "Hobbies", image: hobby },
-  { label: "Business", image: coorporation },
-  { label: "Food & Drink", image: food },
-  { label: "Festivals", image: festival },
-  { label: "Family Events", image: familyEvent },
-  { label: "Custom", image: null },
-  { label: "Other", image: null },
+  { label: "music", image: music },
+  { label: "nightlife", image: nightlife },
+  { label: "hobbies", image: hobby },
+  { label: "business", image: coorporation },
+  { label: "food & drink", image: food },
+  { label: "festivals", image: festival },
+  { label: "family events", image: familyEvent },
+  { label: "custom", image: null },
+  { label: "other", image: null },
 ];
 
 const EventsPage = () => {
@@ -40,7 +40,9 @@ const EventsPage = () => {
             image_url: e.images?.[0]?.url || "",
             date: e.dates?.start?.localDate || "",
             description: e.info || e.pleaseNote || "No description provided",
-            category: e.classifications?.[0]?.segment?.name || "Other",
+            category: (e.classifications?.[0]?.segment?.name || "Other")
+              .trim()
+              .toLowerCase(),
             url: e.url || "#",
           })) || [];
 
@@ -58,7 +60,7 @@ const EventsPage = () => {
           image_url: e.images?.[0] || "",
           date: e.datetime,
           description: e.summary || "No description provided",
-          category: e.category || "Custom",
+          category: (e.category || "Custom").trim().toLowerCase(),
           url: `/event/${e.id}`,
         }));
 
@@ -85,7 +87,9 @@ const EventsPage = () => {
 
   const filteredEvents =
     selectedCategories.size > 0
-      ? events.filter((event) => selectedCategories.has(event.category))
+      ? events.filter((event) =>
+          selectedCategories.has((event.category || "").trim().toLowerCase())
+        )
       : events;
 
   return (
@@ -179,6 +183,9 @@ const EventsPage = () => {
                 >
                   {event.description}
                 </p>
+                <span className="text-xs text-gray-400 italic">
+                  Category: {event.category}
+                </span>
                 <a
                   href={event.url}
                   target="_blank"
