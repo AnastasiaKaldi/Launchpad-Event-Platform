@@ -4,7 +4,7 @@ This is the React + Vite frontend for Eventino, an event management platform tha
 
 ## Features
 
--- Auth-protected routes using JWT cookies
+-- Auth-protected routes using JWT
 
 -- Staff dashboard for creating and managing events
 
