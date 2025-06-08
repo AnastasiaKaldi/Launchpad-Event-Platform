@@ -46,7 +46,7 @@ function Navbar() {
       className="absolute top-0 left-0 w-full z-50"
     >
       <div
-        className="relative flex w-full flex-col overflow-hidden py-2 md:flex-row md:items-center"
+        className="relative flex blur-(2px) w-full flex-col overflow-hidden py-2 md:flex-row md:items-center"
         style={{ backgroundColor: "rgba(98, 8, 8, 0.6)" }}
       >
         <a
