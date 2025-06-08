@@ -64,32 +64,8 @@ npm run preview
 
 Preview production build
 
-## Project Structure
-
-src/
-├── assets/ # Static images used across the app
-├── App.jsx # Root component with route definitions
-├── main.jsx # React app entry point (mounts App to DOM)
-├── EditEvent.jsx # Staff view for editing existing events
-├── Event.jsx # Page showing full event details and join button
-├── EventsPage.jsx # Lists all events (Ticketmaster + custom)
-├── Footer.jsx # Footer for homepage layout
-├── Homepage.jsx # Welcome landing page
-├── index.css # Global CSS and Tailwind directives
-├── JoinedEvents.jsx # Page for users to view events they've joined
-├── LoadingPage.jsx # Temporary loading state
-├── Manage.jsx # Dashboard for staff to manage their own events
-├── Navbar.jsx # Site navigation header
-├── OrgEvent.jsx # Event creation form (staff only)
-├── SignIn.jsx # Login page for users and staff
-├── SignUp.jsx # Signup/registration page for new users
-
 ## Roles & Access
 
 Staff: Can create, edit, delete events; see progress stats.
 
 Users: Can browse and join events.
-
-## Feedback
-
-Please feel free to submit pull requests or open issues. For questions, contact kaldianastasia@gmail.com
