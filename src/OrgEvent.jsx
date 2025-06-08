@@ -17,6 +17,7 @@ const CATEGORIES = [
 function OrgEvent() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const [formErrors, setFormErrors] = useState({});
   const [formData, setFormData] = useState({
     title: "",
     summary: "",
@@ -26,11 +27,8 @@ function OrgEvent() {
     things_to_know: "",
     category: CATEGORIES[0],
     images: [],
+    capacity: 50,
   });
-  const [formErrors, setFormErrors] = useState({});
-  const [tickets, setTickets] = useState([
-    { name: "", price: "", isFree: false },
-  ]);
 
   useEffect(() => {
     const API = import.meta.env.VITE_API_URL;
@@ -60,27 +58,11 @@ function OrgEvent() {
       );
       setFormData((prev) => ({ ...prev, images }));
     } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
+      setFormData((prev) => ({
+        ...prev,
+        [name]: name === "capacity" ? parseInt(value, 10) : value,
+      }));
     }
-  };
-
-  const handleTicketChange = (i, field, value) => {
-    const updated = [...tickets];
-    if (field === "isFree") {
-      updated[i].isFree = !updated[i].isFree;
-      if (updated[i].isFree) updated[i].price = "";
-    } else {
-      updated[i][field] = value;
-    }
-    setTickets(updated);
-  };
-
-  const addTicket = () => {
-    setTickets([...tickets, { name: "", price: "", isFree: false }]);
-  };
-
-  const removeTicket = (i) => {
-    setTickets(tickets.filter((_, idx) => idx !== i));
   };
 
   const handleSubmit = async (e) => {
@@ -91,29 +73,27 @@ function OrgEvent() {
     if (!formData.datetime) errors.datetime = "Date & time is required";
     if (!formData.location) errors.location = "Location is required";
     if (!formData.overview) errors.overview = "Overview is required";
-    tickets.forEach((t, idx) => {
-      if (!t.name) errors[`ticket-${idx}-name`] = "Ticket name required";
-      if (!t.isFree && !t.price)
-        errors[`ticket-${idx}-price`] = "Ticket price required";
-    });
+    if (!formData.capacity || isNaN(formData.capacity) || formData.capacity < 1)
+      errors.capacity = "Capacity must be a number above 0";
+
     if (Object.keys(errors).length) {
       setFormErrors(errors);
       return;
     }
+
     setFormErrors({});
-    const payload = {
-      ...formData,
-      tickets,
-    };
+    const payload = { ...formData };
+
     try {
       const API = import.meta.env.VITE_API_URL;
       const res = await axios.post(`${API}/api/events`, payload, {
         withCredentials: true,
       });
-      console.error(res);
+      console.log("✅ Event created:", res.data);
       alert("✅ Event submitted!");
+      navigate("/manage");
     } catch (err) {
-      console.error("Error submitting event:", err);
+      console.error("Error submitting event:", err.response?.data || err);
       alert("❌ Failed to submit event");
     }
   };
@@ -135,12 +115,7 @@ function OrgEvent() {
       <form
         onSubmit={handleSubmit}
         className="space-y-6 max-w-3xl mx-auto rounded-md"
-        aria-labelledby="form-title"
       >
-        <h2 id="form-title" className="sr-only">
-          Event Creation Form
-        </h2>
-
         <label className="block text-center bg-[#BA7F7F] p-6 rounded-lg cursor-pointer text-[#dbd5c5]">
           <img src={upload} alt="Upload" className="mx-auto w-8 h-8" />
           Upload Images
@@ -171,19 +146,13 @@ function OrgEvent() {
                 name={field}
                 value={formData[field]}
                 onChange={handleChange}
-                placeholder={field
-                  .replace(/_/g, " ")
-                  .replace(/\b\w/g, (l) => l.toUpperCase())}
                 className={`w-full p-2 border rounded ${
                   formErrors[field] ? "border-red-500" : ""
                 }`}
                 aria-invalid={!!formErrors[field]}
-                aria-describedby={`error-${field}`}
               />
               {formErrors[field] && (
-                <p id={`error-${field}`} className="text-red-500 text-sm">
-                  {formErrors[field]}
-                </p>
+                <p className="text-red-500 text-sm">{formErrors[field]}</p>
               )}
             </div>
           ))}
@@ -191,7 +160,7 @@ function OrgEvent() {
         <div>
           <label
             htmlFor="datetime"
-            className="block text-lg  text-[#620808] font-medium mb-1"
+            className="block text-lg text-[#620808] font-medium mb-1"
             style={{ fontFamily: "Inknut Antiqua" }}
           >
             Event Date and Time
@@ -205,13 +174,9 @@ function OrgEvent() {
             className={`w-full p-2 border rounded ${
               formErrors.datetime ? "border-red-500" : ""
             }`}
-            aria-invalid={!!formErrors.datetime}
-            aria-describedby="error-datetime"
           />
           {formErrors.datetime && (
-            <p id="error-datetime" className="text-red-500 text-sm">
-              {formErrors.datetime}
-            </p>
+            <p className="text-red-500 text-sm">{formErrors.datetime}</p>
           )}
         </div>
 
@@ -236,102 +201,28 @@ function OrgEvent() {
           </select>
         </div>
 
-        <div className="space-y-4">
-          <h2
-            className="text-xl text-[#620808] font-semibold "
+        <div>
+          <label
+            htmlFor="capacity"
+            className="block text-lg text-[#620808] font-medium mb-1"
             style={{ fontFamily: "Inknut Antiqua" }}
           >
-            Ticket Types
-          </h2>
-          {tickets.map((ticket, i) => (
-            <div key={i} className="flex gap-2 items-center">
-              <div>
-                <label
-                  htmlFor={`ticket-name-${i}`}
-                  className="block text-sm text-[#620808] font-medium mb-1"
-                  style={{ fontFamily: "Inknut Antiqua" }}
-                >
-                  Ticket Name
-                </label>
-                <input
-                  id={`ticket-name-${i}`}
-                  placeholder="Ticket Name"
-                  value={ticket.name}
-                  onChange={(e) =>
-                    handleTicketChange(i, "name", e.target.value)
-                  }
-                  className={`flex-1 p-2 border rounded ${
-                    formErrors[`ticket-${i}-name`] ? "border-red-500" : ""
-                  }`}
-                  aria-invalid={!!formErrors[`ticket-${i}-name`]}
-                  aria-describedby={`error-ticket-${i}-name`}
-                />
-                {formErrors[`ticket-${i}-name`] && (
-                  <p
-                    id={`error-ticket-${i}-name`}
-                    className="text-red-500 text-sm"
-                  >
-                    {formErrors[`ticket-${i}-name`]}
-                  </p>
-                )}
-              </div>
-              <div>
-                <label
-                  htmlFor={`ticket-price-${i}`}
-                  className="block text-sm font-medium  text-[#620808] mb-1"
-                  style={{ fontFamily: "Inknut Antiqua" }}
-                >
-                  Ticket Price
-                </label>
-                <input
-                  id={`ticket-price-${i}`}
-                  type="number"
-                  placeholder="Price"
-                  value={ticket.isFree ? "" : ticket.price}
-                  onChange={(e) =>
-                    handleTicketChange(i, "price", e.target.value)
-                  }
-                  disabled={ticket.isFree}
-                  className={`w-24 p-2 border rounded ${
-                    formErrors[`ticket-${i}-price`] ? "border-red-500" : ""
-                  }`}
-                  aria-invalid={!!formErrors[`ticket-${i}-price`]}
-                  aria-describedby={`error-ticket-${i}-price`}
-                />
-                {formErrors[`ticket-${i}-price`] && (
-                  <p
-                    id={`error-ticket-${i}-price`}
-                    className="text-red-500 text-sm"
-                  >
-                    {formErrors[`ticket-${i}-price`]}
-                  </p>
-                )}
-              </div>
-              <label
-                className="flex items-center text-[#620808] gap-1"
-                style={{ fontFamily: "Inknut Antiqua" }}
-              >
-                <input
-                  type="checkbox"
-                  checked={ticket.isFree}
-                  onChange={() => handleTicketChange(i, "isFree")}
-                />
-                Free
-              </label>
-              {tickets.length > 1 && (
-                <button
-                  type="button"
-                  onClick={() => removeTicket(i)}
-                  className="text-red-600"
-                >
-                  🗑
-                </button>
-              )}
-            </div>
-          ))}
-          <button type="button" onClick={addTicket} className="text-blue-600">
-            + Add Ticket
-          </button>
+            Max Attendees
+          </label>
+          <input
+            type="number"
+            id="capacity"
+            name="capacity"
+            min="1"
+            value={formData.capacity}
+            onChange={handleChange}
+            className={`w-full p-2 border rounded ${
+              formErrors.capacity ? "border-red-500" : ""
+            }`}
+          />
+          {formErrors.capacity && (
+            <p className="text-red-500 text-sm">{formErrors.capacity}</p>
+          )}
         </div>
 
         <button

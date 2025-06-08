@@ -92,18 +92,64 @@ function ManageEvents() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4 }}
-                    className="border p-4 rounded shadow bg-white"
+                    className={`relative border p-4 rounded shadow ${
+                      event.status === "full"
+                        ? "bg-gray-100 opacity-80"
+                        : "bg-white"
+                    }`}
                   >
                     <img
                       src={event.image_url || fallbackImage}
                       alt={event.title}
-                      className="w-full h-48 object-cover rounded mb-2"
+                      className="w-full h-48 object-cover rounded mb-2 "
                     />
-                    <h2 className="text-xl font-semibold">{event.title}</h2>
+
+                    {/* FULL banner */}
+                    {event.status === "full" && (
+                      <span className="absolute top-2 left-2 bg-red-600 text-white text-xs px-3 py-1 rounded-full font-bold shadow">
+                        FULL
+                      </span>
+                    )}
+
+                    <h2
+                      className="text-xl font-semibold text-[#620808]"
+                      style={{ fontFamily: "Inknut Antiqua" }}
+                    >
+                      {event.title}
+                    </h2>
+
+                    {event.status === "full" && (
+                      <p className="text-sm text-red-600 font-medium mt-1">
+                        This event is full
+                      </p>
+                    )}
+
                     <p className="text-sm text-gray-600">
                       {new Date(event.datetime).toLocaleString()}
                     </p>
                     <p className="mt-2 text-gray-700">{event.summary}</p>
+                    <div className="mt-3">
+                      <div className="text-sm text-gray-600 mb-1">
+                        {event.attendee_count || 0} of {event.capacity} joined
+                      </div>
+                      <div className="w-full bg-gray-300 h-3 rounded overflow-hidden">
+                        <div
+                          className={`h-3 rounded transition-all duration-300 ${
+                            event.status === "full"
+                              ? "bg-red-600 animate-pulse"
+                              : "bg-green-600"
+                          }`}
+                          style={{
+                            width: `${Math.min(
+                              100,
+                              ((event.attendee_count || 0) / event.capacity) *
+                                100
+                            )}%`,
+                          }}
+                        />
+                      </div>
+                    </div>
+
                     <div className="mt-4 flex flex-col sm:flex-row gap-2 sm:gap-4">
                       <motion.button
                         whileHover={{ scale: 1.1 }}

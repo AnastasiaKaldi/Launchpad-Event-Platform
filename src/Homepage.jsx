@@ -59,7 +59,10 @@ const Homepage = () => {
                 {slide.headline}
               </motion.h2>
               <a href={slide.link}>
-                <button className="bg-[#B77F77] hover:bg-[#a06a6a] text-[#dbd5c5] px-6 py-3 text-lg font-semibold rounded shadow transition duration-300">
+                <button
+                  className="bg-[#B77F77] hover:bg-[#a06a6a] text-[#dbd5c5] px-6 py-3 text-lg font-semibold rounded shadow transition duration-300"
+                  style={{ fontFamily: "Inknut Antiqua" }}
+                >
                   Explore Events
                 </button>
               </a>
