@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import axios from "axios";
@@ -71,7 +72,10 @@ function Event() {
   }
 
   return (
-    <div className="min-h-screen bg-[#dbd5c5] text-white py-12 font-mono">
+    <div
+      className="min-h-screen bg-[#dbd5c5] text-white pt-32 py-12"
+      style={{ fontFamily: "Inknut Antiqua" }}
+    >
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Event banner */}
         <div className="relative max-w-screen-lg mx-auto mb-10 rounded-xl overflow-hidden">

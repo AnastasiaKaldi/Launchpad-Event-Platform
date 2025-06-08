@@ -14,6 +14,9 @@ import Footer from "./Footer.jsx";
 import Manage from "./Manage.jsx";
 import JoinedEvents from "./JoinedEvents.jsx";
 import EditEvent from "./EditEvent.jsx";
+import Support from "./Support";
+import Privacy from "./Privacy";
+import Terms from "./Terms";
 
 import "./index.css";
 
@@ -34,6 +37,9 @@ const router = createBrowserRouter([
       { path: "manage", element: <Manage /> },
       { path: "myevents", element: <JoinedEvents /> },
       { path: "edit-event/:id", element: <EditEvent /> },
+      { path: "support", element: <Support /> },
+      { path: "privacy", element: <Privacy /> },
+      { path: "terms", element: <Terms /> },
     ],
   },
 ]);

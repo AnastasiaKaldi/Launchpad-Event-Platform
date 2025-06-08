@@ -22,9 +22,13 @@ function JoinedEvents() {
     if (!confirmLeave) return;
 
     try {
-      await axios.delete(`${API}/api/events/${eventId}/leave`, {
-        withCredentials: true,
-      });
+      await axios.post(
+        `${API}/api/events/${eventId}/leave`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
       setEvents((prev) => prev.filter((e) => e.id !== eventId));
     } catch (err) {
       console.error("Failed to leave event:", err);

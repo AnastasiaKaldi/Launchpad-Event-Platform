@@ -33,7 +33,11 @@ function OrgEvent() {
   useEffect(() => {
     const API = import.meta.env.VITE_API_URL;
     axios
-      .get(`${API}/api/auth/me`, { withCredentials: true })
+      .get(`${API}/api/auth/me`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
       .then((res) => {
         if (res.data.role !== "staff") {
           alert("🚫 You are not authorized to access this page.");
@@ -73,6 +77,8 @@ function OrgEvent() {
     if (!formData.datetime) errors.datetime = "Date & time is required";
     if (!formData.location) errors.location = "Location is required";
     if (!formData.overview) errors.overview = "Overview is required";
+    if (!formData.images.length)
+      errors.images = "At least one image is required";
     if (!formData.capacity || isNaN(formData.capacity) || formData.capacity < 1)
       errors.capacity = "Capacity must be a number above 0";
 
@@ -87,7 +93,9 @@ function OrgEvent() {
     try {
       const API = import.meta.env.VITE_API_URL;
       const res = await axios.post(`${API}/api/events`, payload, {
-        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
       console.log("✅ Event created:", res.data);
       alert("✅ Event submitted!");
@@ -98,12 +106,18 @@ function OrgEvent() {
     }
   };
 
-  if (loading) return null;
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#dbd5c5]">
+        <p className="text-[#620808] text-xl">Checking access...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-[#dbd5c5] min-h-screen py-10 px-6">
       <div className="text-center mb-12 rounded-xl">
-        <div className="relative max-w-7xl mx-auto ">
+        <div className="relative max-w-7xl mx-auto">
           <img src={org} alt="Header" className="w-full h-60 object-cover" />
           <div className="absolute inset-0 bg-[#BA7F7F]/80 flex flex-col justify-center items-center text-[#dbd5c5]">
             <h1 className="text-4xl font-bold">Create an Event</h1>
@@ -127,6 +141,26 @@ function OrgEvent() {
             className="hidden"
           />
         </label>
+
+        {formErrors.images && (
+          <p className="text-red-500 text-sm text-center">
+            {formErrors.images}
+          </p>
+        )}
+
+        {/* Preview Images */}
+        {formData.images.length > 0 && (
+          <div className="flex flex-wrap justify-center gap-4 mt-4">
+            {formData.images.map((img, idx) => (
+              <img
+                key={idx}
+                src={img}
+                alt={`Preview ${idx}`}
+                className="w-24 h-24 object-cover rounded"
+              />
+            ))}
+          </div>
+        )}
 
         {"title summary location overview things_to_know"
           .split(" ")

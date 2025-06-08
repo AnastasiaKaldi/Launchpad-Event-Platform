@@ -23,13 +23,14 @@ function SignIn() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ email, password }),
-          credentials: "include",
+          // credentials: "include",
         }
       );
 
       const data = await res.json();
 
       if (res.ok) {
+        localStorage.setItem("token", data.token);
         alert("Login successful");
         window.location.href = redirectPath;
       } else {

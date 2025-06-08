@@ -30,7 +30,7 @@ const EventsPage = () => {
     const fetchAllEvents = async () => {
       try {
         const ticketmasterRes = await fetch(
-          "https://app.ticketmaster.com/discovery/v2/events.json?countryCode=GB&size=20&apikey=NspRwMaQPuuFEMtyjjX9yFNppHYreAkV"
+          import.meta.env.VITE_TICKETMASTER_API
         );
         const ticketmasterData = await ticketmasterRes.json();
 

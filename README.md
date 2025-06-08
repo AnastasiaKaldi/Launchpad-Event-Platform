@@ -1,14 +1,95 @@
-# React + Vite
+## Eventino Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the React + Vite frontend for Eventino, an event management platform that allows staff to create events and users to explore and join them. Built for simplicity, responsiveness, and real-time feedback.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+-- Auth-protected routes using JWT cookies
 
-## Expanding the ESLint configuration
+-- Staff dashboard for creating and managing events
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
-# Launchpad-Event-Platform
-# Events-Backend
+-- Public event listing and details
+
+-- Join functionality for users
+
+-- Capacity-based event status (open/full)
+
+-- Image uploads (base64)
+
+-- Real-time progress bar showing attendee count
+
+-- Tech Stack
+
+-- React with Vite
+
+-- Tailwind CSS + custom theming
+
+-- Framer Motion for animations
+
+-- Axios for API communication
+
+-- React Router DOM for routing
+
+## Installation
+
+git clone https://github.com/AnastasiaKaldi/Launchpad-Event-Platform.git
+cd eventorg
+npm install
+
+## Environment Setup
+
+Please ask me directly at kaldianastasia@gmail.com, for security purposes.
+
+## Running Locally
+
+npm run dev
+
+Then open http://localhost:5173 in your browser.
+
+## Scripts
+
+Command
+
+Description
+
+npm run dev
+
+Start dev server
+
+npm run build
+
+Build for production
+
+npm run preview
+
+Preview production build
+
+## Project Structure
+
+src/
+├── assets/ # Static images used across the app
+├── App.jsx # Root component with route definitions
+├── main.jsx # React app entry point (mounts App to DOM)
+├── EditEvent.jsx # Staff view for editing existing events
+├── Event.jsx # Page showing full event details and join button
+├── EventsPage.jsx # Lists all events (Ticketmaster + custom)
+├── Footer.jsx # Footer for homepage layout
+├── Homepage.jsx # Welcome landing page
+├── index.css # Global CSS and Tailwind directives
+├── JoinedEvents.jsx # Page for users to view events they've joined
+├── LoadingPage.jsx # Temporary loading state
+├── Manage.jsx # Dashboard for staff to manage their own events
+├── Navbar.jsx # Site navigation header
+├── OrgEvent.jsx # Event creation form (staff only)
+├── SignIn.jsx # Login page for users and staff
+├── SignUp.jsx # Signup/registration page for new users
+
+## Roles & Access
+
+Staff: Can create, edit, delete events; see progress stats.
+
+Users: Can browse and join events.
+
+## Feedback
+
+Please feel free to submit pull requests or open issues. For questions, contact kaldianastasia@gmail.com
