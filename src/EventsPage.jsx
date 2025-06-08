@@ -9,7 +9,7 @@ import nightlife from "../src/assets/nightlife.png";
 import food from "../src/assets/ramen.png";
 import festival from "../src/assets/decoration.png";
 import familyEvent from "../src/assets/familyEvent.png";
-import loadingSpinner from "../src/assets/loading.gif";
+import loadingSpinner from "../src/assets/loading.png";
 
 const filterOptions = [
   { label: "music", image: music },
