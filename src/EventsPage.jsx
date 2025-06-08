@@ -9,6 +9,7 @@ import nightlife from "../src/assets/nightlife.png";
 import food from "../src/assets/ramen.png";
 import festival from "../src/assets/decoration.png";
 import familyEvent from "../src/assets/familyEvent.png";
+import loadingSpinner from "../src/assets/loading.gif";
 
 const filterOptions = [
   { label: "music", image: music },
@@ -25,6 +26,7 @@ const filterOptions = [
 const EventsPage = () => {
   const [events, setEvents] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState(new Set());
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchAllEvents = async () => {
@@ -67,6 +69,8 @@ const EventsPage = () => {
         setEvents([...localEvents, ...tmEvents]);
       } catch (err) {
         console.error("Failed to fetch events:", err);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -91,6 +95,24 @@ const EventsPage = () => {
           selectedCategories.has((event.category || "").trim().toLowerCase())
         )
       : events;
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col justify-center items-center bg-[#dbd5c5]">
+        <img
+          src={loadingSpinner}
+          alt="Loading..."
+          className="w-16 h-16 mb-4 animate-spin"
+        />
+        <p
+          className="text-xl text-[#620808] font-semibold"
+          style={{ fontFamily: "Inknut Antiqua" }}
+        >
+          Fetching the latest events for you...
+        </p>
+      </div>
+    );
+  }
 
   return (
     <section className="bg-[#dbd5c5] py-10 min-h-screen" id="events">
