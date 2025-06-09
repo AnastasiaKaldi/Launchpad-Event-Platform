@@ -2,6 +2,7 @@ import signup from "../src/assets/SignUp.jpg";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 function SignUp() {
   const [firstName, setFirstName] = useState("");
@@ -26,16 +27,12 @@ function SignUp() {
       );
 
       if (res.status === 201) {
-        // await axios.post(
-        //   `${import.meta.env.VITE_API_URL}/api/send-verification-email`,
-        //   { email }
-        // );
-
-        alert(
-          "Registration successful! Please check your email to verify your account."
-        );
+        toast.success("✅ Registration successful! You can now sign in.");
+        setTimeout(() => {
+          window.location.href = "/signin";
+        }, 1500);
       } else {
-        alert(res.data.message || "Registration failed");
+        toast.error(res.data.message || "❌ Registration failed.");
       }
     } catch (err) {
       console.error("Registration error:", err);
@@ -44,16 +41,15 @@ function SignUp() {
         err.response.data &&
         err.response.data.message === "User already exists"
       ) {
-        alert("A user with this email already exists.");
+        toast.error("⚠️ A user with this email already exists.");
       } else {
-        alert("Server error. Please try again.");
+        toast.error("🚫 Server error. Please try again.");
       }
     }
   };
 
   return (
     <div className="flex w-full flex-wrap">
-      {/* Left Panel */}
       <div className="flex w-full flex-col md:w-1/2 lg:w-1/3 bg-[#BA7F7F]">
         <div className="flex justify-center md:-mb-24 md:justify-start md:pl-12">
           <a
@@ -83,7 +79,6 @@ function SignUp() {
             className="flex flex-col pt-3 md:pt-8"
             onSubmit={handleRegister}
           >
-            {/* First Name */}
             <div className="flex flex-col pt-4">
               <input
                 type="text"
@@ -95,7 +90,6 @@ function SignUp() {
               />
             </div>
 
-            {/* Last Name */}
             <div className="flex flex-col pt-4">
               <input
                 type="text"
@@ -107,7 +101,6 @@ function SignUp() {
               />
             </div>
 
-            {/* Email */}
             <div className="flex flex-col pt-4">
               <div className="relative flex overflow-hidden rounded-lg border focus-within:border-transparent focus-within:ring-2 transition focus-within:ring-blue-600">
                 <span className="inline-flex items-center border-r border-gray-300 bg-white px-3 text-sm text-gray-500 shadow-sm">
@@ -124,7 +117,6 @@ function SignUp() {
               </div>
             </div>
 
-            {/* Password */}
             <div className="mb-12 flex flex-col pt-4">
               <div className="relative flex overflow-hidden rounded-lg border focus-within:border-transparent focus-within:ring-2 transition focus-within:ring-blue-600">
                 <span className="inline-flex items-center border-r border-gray-300 bg-white px-3 text-sm text-gray-500 shadow-sm">
@@ -141,7 +133,6 @@ function SignUp() {
               </div>
             </div>
 
-            {/* Submit Button */}
             <button
               type="submit"
               className="w-full rounded-lg bg-[#620808] text-lg px-4 py-2 font-semibold text-[#dbd5c5] shadow-md transition ease-in hover:bg-blue-600 focus:outline-none focus:ring-2"
@@ -150,7 +141,6 @@ function SignUp() {
             </button>
           </form>
 
-          {/* Redirect */}
           <div className="pt-12 pb-12 text-center">
             <p
               className="text-[#dbd5c5] text-xl"
@@ -169,7 +159,6 @@ function SignUp() {
         </div>
       </div>
 
-      {/* Right Panel Image */}
       <div className="pointer-events-none hidden select-none bg-black shadow-2xl md:block md:w-1/2 lg:w-2/3">
         <img
           className="h-screen w-full object-cover opacity-90"

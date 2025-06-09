@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 function Event() {
   const { id } = useParams();
@@ -10,7 +11,6 @@ function Event() {
 
   const [event, setEvent] = useState(null);
   const [joinLoading, setJoinLoading] = useState(false);
-  const [joinMessage, setJoinMessage] = useState("");
   const [joined, setJoined] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(true);
 
@@ -38,7 +38,6 @@ function Event() {
   const handleJoinEvent = async () => {
     try {
       setJoinLoading(true);
-      setJoinMessage("");
 
       const token = localStorage.getItem("token");
 
@@ -55,21 +54,26 @@ function Event() {
       setJoined(true);
 
       if (res.data.isNowFull) {
-        setJoinMessage("🎉 You were the last to join! The event is now full.");
-        alert("🎉 This event is now full. You were the last to join!");
+        toast.success("🎉 You were the last to join! The event is now full.");
       } else {
-        setJoinMessage("You’ve joined this event! 🎉");
+        toast.success("🎉 You've successfully joined this event!");
       }
 
       await loadEvent();
     } catch (err) {
       if (err.response?.status === 401) {
-        setJoinMessage("🔐 Please log in to join this event.");
+        toast.error("🔐 Please log in to join this event.");
+        setIsAuthenticated(false);
+      } else if (
+        err.response?.data?.message === "You have already joined this event."
+      ) {
+        toast.info("✅ You've already joined this event.");
+        setJoined(true);
       } else {
         const msg =
           err.response?.data?.message ||
-          "Something went wrong joining the event.";
-        setJoinMessage(msg);
+          "⚠️ Something went wrong joining the event.";
+        toast.error(msg);
       }
     } finally {
       setJoinLoading(false);
@@ -86,7 +90,7 @@ function Event() {
       style={{ fontFamily: "Inknut Antiqua" }}
     >
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Event banner */}
+        {/* Banner */}
         <div className="relative max-w-screen-lg mx-auto mb-10 rounded-xl overflow-hidden">
           <img
             src={event.images?.[0]}
@@ -100,7 +104,7 @@ function Event() {
           )}
         </div>
 
-        {/* Title and details */}
+        {/* Title and info */}
         <div className="text-center space-y-4 font-serif">
           <h1 className="text-5xl font-extrabold tracking-tight text-[#620808]">
             {event.title}
@@ -120,7 +124,7 @@ function Event() {
           </p>
         </div>
 
-        {/* Things to Know */}
+        {/* Things to know */}
         <div className="mt-8 max-w-3xl mx-auto text-left font-serif">
           <h3 className="text-xl text-[#620808] font-semibold mb-4">
             Things to Know
@@ -128,26 +132,8 @@ function Event() {
           <p className="text-[#620808] text-lg">{event.things_to_know}</p>
         </div>
 
-        {/* Join section */}
+        {/* Join button */}
         <div className="mt-8 max-w-3xl mx-auto text-center font-serif">
-          {joinMessage && (
-            <div className="mb-4 text-[#620808] text-lg font-medium">
-              {joinMessage.includes("log in") ? (
-                <>
-                  🔐 Please{" "}
-                  <Link
-                    to="/signin"
-                    className="underline text-[#620808] hover:text-red-700"
-                  >
-                    log in
-                  </Link>{" "}
-                  to join this event.
-                </>
-              ) : (
-                joinMessage
-              )}
-            </div>
-          )}
           {isAuthenticated ? (
             <button
               onClick={handleJoinEvent}

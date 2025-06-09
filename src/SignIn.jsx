@@ -1,7 +1,7 @@
 import signin from "../src/assets/SignIn.jpg";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function SignIn() {
   const [email, setEmail] = useState("");
@@ -30,46 +30,48 @@ function SignIn() {
 
       if (res.ok) {
         localStorage.setItem("token", data.token);
-        alert("Login successful");
-        window.location.href = redirectPath;
+        toast.success("✅ Login successful!");
+        setTimeout(() => {
+          window.location.href = redirectPath;
+        }, 1000);
       } else {
-        alert(data.message || "Login failed");
+        toast.error(data.message || "❌ Login failed");
       }
     } catch (err) {
       console.error("Login error:", err);
-      alert("Server error");
+      toast.error("🚫 Server error. Please try again.");
     }
   };
 
   return (
-    <div class="flex w-full flex-wrap">
-      <div class="flex w-full flex-col md:w-1/2 lg:w-1/3 bg-[#BA7F7F]">
-        <div class="flex justify-center  md:-mb-24 md:justify-start md:pl-12">
+    <div className="flex w-full flex-wrap">
+      <div className="flex w-full flex-col md:w-1/2 lg:w-1/3 bg-[#BA7F7F]">
+        <div className="flex justify-center md:-mb-24 md:justify-start md:pl-12">
           <a
-            href="\"
-            class="border-b-4 border-b-[#620808] pt-12 pb-2 text-4xl font-bold text-[#620808]"
+            href="\\"
+            className="border-b-4 border-b-[#620808] pt-12 pb-2 text-4xl font-bold text-[#620808]"
             style={{ fontFamily: "Inknut Antiqua" }}
           >
             Eventino
           </a>
         </div>
-        <div class="my-auto flex flex-col justify-center px-6 pt-8 sm:px-24 md:justify-start md:px-8 md:pt-0 lg:px-12">
+        <div className="my-auto flex flex-col justify-center px-6 pt-8 sm:px-24 md:justify-start md:px-8 md:pt-0 lg:px-12">
           <p
-            class="text-center text-3xl font-bold text-[#dbd5c5]"
+            className="text-center text-3xl font-bold text-[#dbd5c5]"
             style={{ fontFamily: "Inknut Antiqua" }}
           >
             Welcome!
           </p>
           <p
-            class="mt-2 text-2xl text-center text-[#dbd5c5]"
+            className="mt-2 text-2xl text-center text-[#dbd5c5]"
             style={{ fontFamily: "Inknut Antiqua" }}
           >
             Login to access your account.
           </p>
           <form className="flex flex-col pt-3 md:pt-8" onSubmit={handleLogin}>
-            <div class="flex flex-col pt-4">
-              <div class="relative flex overflow-hidden rounded-lg border focus-within:border-transparent focus-within:ring-2 transition focus-within:ring-blue-600">
-                <span class="inline-flex items-center border-r border-gray-300 bg-white px-3 text-sm text-gray-500 shadow-sm">
+            <div className="flex flex-col pt-4">
+              <div className="relative flex overflow-hidden rounded-lg border focus-within:border-transparent focus-within:ring-2 transition focus-within:ring-blue-600">
+                <span className="inline-flex items-center border-r border-gray-300 bg-white px-3 text-sm text-gray-500 shadow-sm">
                   <svg
                     width="15"
                     height="15"
@@ -90,9 +92,9 @@ function SignIn() {
                 />
               </div>
             </div>
-            <div class="mb-12 flex flex-col pt-4">
-              <div class="relative flex overflow-hidden rounded-lg border focus-within:border-transparent focus-within:ring-2 transition focus-within:ring-blue-600">
-                <span class="inline-flex items-center border-r border-gray-300 bg-white px-3 text-sm text-gray-500 shadow-sm">
+            <div className="mb-12 flex flex-col pt-4">
+              <div className="relative flex overflow-hidden rounded-lg border focus-within:border-transparent focus-within:ring-2 transition focus-within:ring-blue-600">
+                <span className="inline-flex items-center border-r border-gray-300 bg-white px-3 text-sm text-gray-500 shadow-sm">
                   <svg
                     width="15"
                     height="15"
@@ -115,20 +117,19 @@ function SignIn() {
             </div>
             <button
               type="submit"
-              class="w-full rounded-lg bg-[#620808] text-lg px-4 py-2 text-center  font-semibold text-[#dbd5c5] shadow-md transition ease-in hover:bg-blue-600 focus:outline-none focus:ring-2"
+              className="w-full rounded-lg bg-[#620808] text-lg px-4 py-2 text-center font-semibold text-[#dbd5c5] shadow-md transition ease-in hover:bg-blue-600 focus:outline-none focus:ring-2"
             >
               <span
-                class="w-full text-[#dbd5c5]"
+                className="w-full text-[#dbd5c5]"
                 style={{ fontFamily: "Inknut Antiqua" }}
               >
-                {" "}
-                Submit{" "}
+                Submit
               </span>
             </button>
           </form>
-          <div class="pt-12 pb-12 text-center">
+          <div className="pt-12 pb-12 text-center">
             <p
-              class="whitespace-nowrap text-xl text-[#dbd5c5]"
+              className="whitespace-nowrap text-xl text-[#dbd5c5]"
               style={{ fontFamily: "Inknut Antiqua" }}
             >
               Don't have an account?
@@ -144,8 +145,12 @@ function SignIn() {
           </div>
         </div>
       </div>
-      <div class="pointer-events-none hidden select-none bg-black shadow-2xl md:block md:w-1/2 lg:w-2/3">
-        <img class="h-screen w-full object-cover opacity-90" src={signin} />
+      <div className="pointer-events-none hidden select-none bg-black shadow-2xl md:block md:w-1/2 lg:w-2/3">
+        <img
+          className="h-screen w-full object-cover opacity-90"
+          src={signin}
+          alt="Sign In Visual"
+        />
       </div>
     </div>
   );

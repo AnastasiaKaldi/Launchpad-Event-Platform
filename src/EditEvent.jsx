@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import upload from "../src/assets/upload.png";
 import org from "../src/assets/OrgEvent.webp";
+import { toast } from "react-toastify";
 
 const CATEGORIES = [
   "Music",
@@ -38,7 +39,7 @@ function EditEvent() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
-      alert("You're not logged in!");
+      toast.error("🚫 You're not logged in!");
       return navigate("/login");
     }
 
@@ -63,7 +64,7 @@ function EditEvent() {
       })
       .catch((err) => {
         console.error("Failed to load event:", err);
-        alert("Could not load event.");
+        toast.error("❌ Could not load event.");
         navigate("/manage");
       });
   }, [id]);
@@ -113,11 +114,11 @@ function EditEvent() {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      alert("✅ Event updated!");
+      toast.success("✅ Event updated!");
       navigate("/manage");
     } catch (err) {
       console.error("Error updating event:", err);
-      alert("❌ Failed to update event");
+      toast.error("❌ Failed to update event");
     }
   };
 
