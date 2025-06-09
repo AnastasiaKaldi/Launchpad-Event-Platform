@@ -26,10 +26,10 @@ function SignUp() {
       );
 
       if (res.status === 201) {
-        await axios.post(
-          `${import.meta.env.VITE_API_URL}/api/send-verification-email`,
-          { email }
-        );
+        // await axios.post(
+        //   `${import.meta.env.VITE_API_URL}/api/send-verification-email`,
+        //   { email }
+        // );
 
         alert(
           "Registration successful! Please check your email to verify your account."
