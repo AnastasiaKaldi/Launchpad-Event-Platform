@@ -38,7 +38,7 @@ function Navbar() {
       <div className="max-w-screen-xl mx-auto flex flex-col md:flex-row items-center justify-between px-6 py-3">
         <Link
           to="/"
-          className="text-4xl font-black text-[#dbd5c5]"
+          className="text-4xl font-black text-[#dbd5c5] hover:text-[#dbd5c5]"
           style={{ fontFamily: "Inknut Antiqua" }}
         >
           <motion.span

@@ -70,7 +70,7 @@ function JoinedEvents() {
   return (
     <section
       id="joined-events"
-      className="min-h-screen px-6 pt-28 pb-12 bg-gradient-to-br from-pink-50 via-white to-pink-100"
+      className="min-h-screen px-6 pt-28 pb-12 bg-[#dbd5c5]"
     >
       <div className="mb-10 text-center">
         <h2
