@@ -12,6 +12,7 @@ const CATEGORIES = [
   "Food & Drink",
   "Festivals",
   "Family Events",
+  "Other",
 ];
 
 function EditEvent() {
@@ -29,16 +30,22 @@ function EditEvent() {
     things_to_know: "",
     category: CATEGORIES[0],
     images: [],
+    capacity: 50,
   });
 
   const [formErrors, setFormErrors] = useState({});
-  const [tickets, setTickets] = useState([
-    { name: "", price: "", isFree: false },
-  ]);
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("You're not logged in!");
+      return navigate("/login");
+    }
+
     axios
-      .get(`${API}/api/events/${id}`)
+      .get(`${API}/api/events/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
       .then((res) => {
         const event = res.data;
         setFormData({
@@ -50,8 +57,8 @@ function EditEvent() {
           things_to_know: event.things_to_know || "",
           category: event.category || CATEGORIES[0],
           images: event.images || [],
+          capacity: event.capacity || 50,
         });
-        setTickets(event.tickets || []);
         setLoading(false);
       })
       .catch((err) => {
@@ -75,27 +82,11 @@ function EditEvent() {
       );
       setFormData((prev) => ({ ...prev, images }));
     } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
+      setFormData((prev) => ({
+        ...prev,
+        [name]: name === "capacity" ? parseInt(value, 10) : value,
+      }));
     }
-  };
-
-  const handleTicketChange = (i, field, value) => {
-    const updated = [...tickets];
-    if (field === "isFree") {
-      updated[i].isFree = !updated[i].isFree;
-      if (updated[i].isFree) updated[i].price = "";
-    } else {
-      updated[i][field] = value;
-    }
-    setTickets(updated);
-  };
-
-  const addTicket = () => {
-    setTickets([...tickets, { name: "", price: "", isFree: false }]);
-  };
-
-  const removeTicket = (i) => {
-    setTickets(tickets.filter((_, idx) => idx !== i));
   };
 
   const handleSubmit = async (e) => {
@@ -106,27 +97,21 @@ function EditEvent() {
     if (!formData.datetime) errors.datetime = "Date & time is required";
     if (!formData.location) errors.location = "Location is required";
     if (!formData.overview) errors.overview = "Overview is required";
-    tickets.forEach((t, idx) => {
-      if (!t.name) errors[`ticket-${idx}-name`] = "Ticket name required";
-      if (!t.isFree && !t.price)
-        errors[`ticket-${idx}-price`] = "Ticket price required";
-    });
+    if (!formData.images.length)
+      errors.images = "At least one image is required";
+    if (!formData.capacity || isNaN(formData.capacity) || formData.capacity < 1)
+      errors.capacity = "Capacity must be a number above 0";
+
     if (Object.keys(errors).length) {
       setFormErrors(errors);
       return;
     }
 
     try {
-      await axios.put(
-        `${API}/api/events/${id}`,
-        {
-          ...formData,
-          tickets,
-        },
-        {
-          withCredentials: true,
-        }
-      );
+      const token = localStorage.getItem("token");
+      await axios.put(`${API}/api/events/${id}`, formData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       alert("✅ Event updated!");
       navigate("/manage");
@@ -166,6 +151,25 @@ function EditEvent() {
           />
         </label>
 
+        {formErrors.images && (
+          <p className="text-red-500 text-sm text-center italic">
+            {formErrors.images}
+          </p>
+        )}
+
+        {formData.images.length > 0 && (
+          <div className="flex flex-wrap justify-center gap-4 mt-4">
+            {formData.images.map((img, idx) => (
+              <img
+                key={idx}
+                src={img}
+                alt={`Preview ${idx}`}
+                className="w-28 h-28 object-cover rounded-xl shadow-md"
+              />
+            ))}
+          </div>
+        )}
+
         {"title summary location overview things_to_know"
           .split(" ")
           .map((field) => (
@@ -173,7 +177,6 @@ function EditEvent() {
               <label
                 htmlFor={field}
                 className="block text-lg text-[#620808] font-medium mb-1"
-                style={{ fontFamily: "Inknut Antiqua" }}
               >
                 {field
                   .replace(/_/g, " ")
@@ -187,13 +190,9 @@ function EditEvent() {
                 className={`w-full p-2 border rounded ${
                   formErrors[field] ? "border-red-500" : ""
                 }`}
-                aria-invalid={!!formErrors[field]}
-                aria-describedby={`error-${field}`}
               />
               {formErrors[field] && (
-                <p id={`error-${field}`} className="text-red-500 text-sm">
-                  {formErrors[field]}
-                </p>
+                <p className="text-red-500 text-sm">{formErrors[field]}</p>
               )}
             </div>
           ))}
@@ -210,7 +209,6 @@ function EditEvent() {
             className={`w-full p-2 border rounded ${
               formErrors.datetime ? "border-red-500" : ""
             }`}
-            aria-invalid={!!formErrors.datetime}
           />
         </div>
 
@@ -230,62 +228,25 @@ function EditEvent() {
           </select>
         </div>
 
-        <div className="space-y-4">
-          <h2 className="text-xl text-[#620808] font-semibold">Ticket Types</h2>
-          {tickets.map((ticket, i) => (
-            <div key={i} className="flex gap-2 items-center">
-              <div>
-                <label className="block text-sm text-[#620808] font-medium mb-1">
-                  Ticket Name
-                </label>
-                <input
-                  value={ticket.name}
-                  onChange={(e) =>
-                    handleTicketChange(i, "name", e.target.value)
-                  }
-                  className={`flex-1 p-2 border rounded ${
-                    formErrors[`ticket-${i}-name`] ? "border-red-500" : ""
-                  }`}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-[#620808] mb-1">
-                  Ticket Price
-                </label>
-                <input
-                  type="number"
-                  value={ticket.isFree ? "" : ticket.price}
-                  onChange={(e) =>
-                    handleTicketChange(i, "price", e.target.value)
-                  }
-                  disabled={ticket.isFree}
-                  className={`w-24 p-2 border rounded ${
-                    formErrors[`ticket-${i}-price`] ? "border-red-500" : ""
-                  }`}
-                />
-              </div>
-              <label className="flex items-center text-[#620808] gap-1">
-                <input
-                  type="checkbox"
-                  checked={ticket.isFree}
-                  onChange={() => handleTicketChange(i, "isFree")}
-                />
-                Free
-              </label>
-              {tickets.length > 1 && (
-                <button
-                  type="button"
-                  onClick={() => removeTicket(i)}
-                  className="text-red-600"
-                >
-                  🗑
-                </button>
-              )}
-            </div>
-          ))}
-          <button type="button" onClick={addTicket} className="text-blue-600">
-            + Add Ticket
-          </button>
+        <div>
+          <label className="block text-lg text-[#620808] font-medium mb-1">
+            Max Attendees
+          </label>
+          <input
+            type="number"
+            name="capacity"
+            min="1"
+            value={formData.capacity}
+            onChange={handleChange}
+            className={`w-full p-2 border rounded ${
+              formErrors.capacity ? "border-red-500" : ""
+            }`}
+          />
+          {formErrors.capacity && (
+            <p className="text-red-500 text-sm mt-1 italic">
+              {formErrors.capacity}
+            </p>
+          )}
         </div>
 
         <button
