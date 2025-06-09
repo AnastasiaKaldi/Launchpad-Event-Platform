@@ -13,13 +13,26 @@ function ManageEvents() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    console.log("🔐 Loaded token from localStorage:", token);
 
     axios
-      .get(`${API}/api/events/joined`, {
+      .get(`${API}/api/events/mine`, {
         headers: { Authorization: `Bearer ${token}` },
       })
-      .then((res) => setEvents(res.data))
-      .catch((err) => console.error("Error fetching events:", err));
+      .then((res) => {
+        console.log("📦 Joined events API response:", res.data);
+        setEvents(res.data);
+      })
+      .catch((err) => {
+        console.error("❌ Error fetching events:", err);
+        if (err.response) {
+          console.error(
+            "🔍 Server responded with:",
+            err.response.status,
+            err.response.data
+          );
+        }
+      });
   }, []);
 
   const handleCreate = () => navigate("/orgevent");
