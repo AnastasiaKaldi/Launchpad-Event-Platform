@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FaUserCircle } from "react-icons/fa";
-import { FiLogOut } from "react-icons/fi";
+import { IoLogOut } from "react-icons/io5";
 import { motion } from "framer-motion";
 
 function Navbar() {
@@ -18,24 +18,14 @@ function Navbar() {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       })
-      .then((res) => {
-        setUser(res.data);
-      })
-      .catch((err) => {
-        setUser(null);
-      });
+      .then((res) => setUser(res.data))
+      .catch(() => setUser(null));
   }, []);
 
-  useEffect(() => {}, [user]);
-
-  const handleLogout = async () => {
-    try {
-      localStorage.removeItem("token");
-      setUser(null);
-      navigate("/");
-    } catch (err) {
-      console.error("Logout failed", err);
-    }
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setUser(null);
+    navigate("/");
   };
 
   return (
@@ -43,34 +33,28 @@ function Navbar() {
       initial={{ y: -80, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 1, ease: "easeOut" }}
-      className="absolute top-0 left-0 w-full z-50"
+      className="fixed top-0 left-0 w-full z-50 backdrop-blur-lg bg-[#620808]/70 shadow-md"
     >
-      <div
-        className="relative flex blur-(2px) w-full flex-col overflow-hidden py-2 md:flex-row md:items-center"
-        style={{ backgroundColor: "rgba(98, 8, 8, 0.6)" }}
-      >
-        <a
-          href="\"
-          className="flex items-center whitespace-nowrap text-4xl font-black ml-8"
+      <div className="max-w-screen-xl mx-auto flex flex-col md:flex-row items-center justify-between px-6 py-3">
+        <Link
+          to="/"
+          className="text-4xl font-black text-[#dbd5c5]"
+          style={{ fontFamily: "Inknut Antiqua" }}
         >
           <motion.span
-            whileHover={{ scale: 1.1, rotate: [0, 2, -2, 0] }}
+            whileHover={{ scale: 1.08, rotate: [0, 2, -2, 0] }}
             transition={{ duration: 0.5 }}
-            className="text-[#dbd5c5]"
-            style={{ fontFamily: "Inknut Antiqua" }}
           >
             Eventino
           </motion.span>
-        </a>
+        </Link>
 
-        <input type="checkbox" className="peer hidden" id="navbar-open" />
+        <input type="checkbox" className="peer hidden" id="navbar-toggle" />
         <label
-          className="absolute top-5 right-7 cursor-pointer md:hidden"
-          htmlFor="navbar-open"
+          htmlFor="navbar-toggle"
+          className="absolute right-6 top-5 cursor-pointer md:hidden"
         >
-          <span className="sr-only">Toggle Navigation</span>
           <svg
-            xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6 text-[#dbd5c5]"
             fill="none"
             viewBox="0 0 24 24"
@@ -85,47 +69,47 @@ function Navbar() {
           </svg>
         </label>
 
-        <nav
-          aria-label="Header Navigation"
-          className="peer-checked peer-checked:max-h-56 flex max-h-0 w-full flex-col items-center justify-between overflow-hidden transition-all md:ml-24 md:max-h-full md:flex-row md:items-start"
-        >
-          <ul className="flex flex-col items-center space-y-2 md:ml-auto md:flex-row md:space-y-0">
-            <li className="md:mr-12">
+        <nav className="peer-checked:max-h-[300px] max-h-0 overflow-hidden transition-all duration-300 ease-in-out md:max-h-full md:flex md:items-center w-full md:w-auto mt-4 md:mt-0">
+          <ul className="flex flex-col md:flex-row items-center gap-4 md:gap-10">
+            <li>
               <Link
                 to={{ pathname: "/", hash: "#events" }}
-                className="text-[#dbd5c5] hover:text-[#a79066] visited:text-[#dbd5c5]"
+                className="text-[#dbd5c5] hover:text-[#FFE9C1]"
                 style={{ fontFamily: "Inknut Antiqua" }}
               >
                 Events
               </Link>
             </li>
+
             {user?.role === "staff" && (
-              <li className="md:mr-12">
+              <li>
                 <Link
                   to="/manage"
-                  className="text-[#dbd5c5] hover:text-[#a79066] visited:text-[#dbd5c5]"
+                  className="text-[#dbd5c5] hover:text-[#FFE9C1]"
                   style={{ fontFamily: "Inknut Antiqua" }}
                 >
                   Dashboard
                 </Link>
               </li>
             )}
+
             {user?.role === "user" && (
-              <li className="md:mr-12">
+              <li>
                 <Link
                   to="/myevents"
-                  className="text-[#dbd5c5] hover:text-[#a79066] visited:text-[#dbd5c5]"
+                  className="text-[#dbd5c5] hover:text-[#FFE9C1]"
                   style={{ fontFamily: "Inknut Antiqua" }}
                 >
                   My Events
                 </Link>
               </li>
             )}
+
             {!user ? (
-              <li className="md:mr-4">
+              <li>
                 <Link to="/signin">
                   <button
-                    className="rounded-md border-2 border-[#dbd5c5] px-6 py-1 font-medium text-[#dbd5c5] transition-colors hover:bg-[#FFE9C1] hover:text-[#a79066]"
+                    className="rounded-lg border-2 border-[#dbd5c5] px-5 py-1 font-medium text-[#dbd5c5] hover:bg-[#FFE9C1] hover:text-[#1d1c1c] transition-all"
                     style={{ fontFamily: "Inknut Antiqua" }}
                   >
                     Log in
@@ -134,25 +118,23 @@ function Navbar() {
               </li>
             ) : (
               <>
-                <li className="md:mr-2">
-                  <motion.div
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.5 }}
-                    className="flex items-center space-x-2 rounded-md border-2 border-[#dbd5c5] px-4 py-1 text-[#dbd5c5] transition-colors hover:bg-[#FFE9C1] hover:text-[#1d1c1c]"
-                    style={{ fontFamily: "Inknut Antiqua" }}
-                  >
-                    <FaUserCircle className="text-xl" />
-                    <span>Welcome, {user.first_name}</span>
-                  </motion.div>
-                </li>
+                <motion.li
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="flex items-center gap-2 px-4 py-1 border-2 border-[#dbd5c5] rounded-md text-[#dbd5c5] hover:bg-[#FFE9C1] hover:text-[#1d1c1c]"
+                  style={{ fontFamily: "Inknut Antiqua" }}
+                >
+                  <FaUserCircle className="text-xl" />
+                  <span>Welcome, {user.first_name}</span>
+                </motion.li>
                 <li>
                   <button
                     onClick={handleLogout}
                     title="Log out"
-                    className="p-2 rounded-full text-[#dbd5c5] hover:text-[#a79066] transition"
+                    className="p-2 rounded-full bg-white hover:scale-105 transition"
                   >
-                    <FiLogOut className="text-2xl" />
+                    <IoLogOut className="text-2xl text-[#620808]" />
                   </button>
                 </li>
               </>

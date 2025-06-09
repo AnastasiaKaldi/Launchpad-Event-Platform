@@ -12,6 +12,7 @@ const CATEGORIES = [
   "Food & Drink",
   "Festivals",
   "Family Events",
+  "Other",
 ];
 
 function OrgEvent() {
@@ -108,30 +109,36 @@ function OrgEvent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#dbd5c5]">
-        <p className="text-[#620808] text-xl">Checking access...</p>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-[#f8ede3] to-[#eac7c7]">
+        <p className="text-[#620808] text-xl animate-pulse font-semibold tracking-wide">
+          Checking access...
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="bg-[#dbd5c5] min-h-screen py-10 px-6">
-      <div className="text-center mb-12 rounded-xl">
+    <div className="bg-gradient-to-b from-[#f5ebe0] via-[#dbd5c5] to-[#f5ebe0] min-h-screen py-10 px-6">
+      <div className="text-center mt-12 mb-12 rounded-xl shadow-xl overflow-hidden">
         <div className="relative max-w-7xl mx-auto">
-          <img src={org} alt="Header" className="w-full h-60 object-cover" />
-          <div className="absolute inset-0 bg-[#BA7F7F]/80 flex flex-col justify-center items-center text-[#dbd5c5]">
-            <h1 className="text-4xl font-bold">Create an Event</h1>
-            <p>Share your event with the world!</p>
+          <img src={org} alt="Header" className="w-full h-72 object-cover" />
+          <div className="absolute inset-0 bg-[#BA7F7F]/80 flex flex-col justify-center items-center text-[#fefae0]">
+            <h1 className="text-5xl font-extrabold drop-shadow-lg tracking-wide">
+              Host Your Own Event
+            </h1>
+            <p className="mt-2 text-lg italic">
+              Let the world know what you're planning!
+            </p>
           </div>
         </div>
       </div>
 
       <form
         onSubmit={handleSubmit}
-        className="space-y-6 max-w-3xl mx-auto rounded-md"
+        className="space-y-8 max-w-4xl mx-auto bg-[#f5ebe0] p-10 rounded-xl shadow-2xl"
       >
-        <label className="block text-center bg-[#BA7F7F] p-6 rounded-lg cursor-pointer text-[#dbd5c5]">
-          <img src={upload} alt="Upload" className="mx-auto w-8 h-8" />
+        <label className="block text-center bg-[#BA7F7F] hover:bg-[#a85f5f] transition p-6 rounded-lg cursor-pointer text-[#dbd5c5] font-medium text-lg shadow-md">
+          <img src={upload} alt="Upload" className="mx-auto w-8 h-8 mb-2" />
           Upload Images
           <input
             type="file"
@@ -143,12 +150,11 @@ function OrgEvent() {
         </label>
 
         {formErrors.images && (
-          <p className="text-red-500 text-sm text-center">
+          <p className="text-red-500 text-sm text-center italic">
             {formErrors.images}
           </p>
         )}
 
-        {/* Preview Images */}
         {formData.images.length > 0 && (
           <div className="flex flex-wrap justify-center gap-4 mt-4">
             {formData.images.map((img, idx) => (
@@ -156,7 +162,7 @@ function OrgEvent() {
                 key={idx}
                 src={img}
                 alt={`Preview ${idx}`}
-                className="w-24 h-24 object-cover rounded"
+                className="w-28 h-28 object-cover rounded-xl shadow-md"
               />
             ))}
           </div>
@@ -168,7 +174,7 @@ function OrgEvent() {
             <div key={field}>
               <label
                 htmlFor={field}
-                className="block text-lg text-[#620808] font-medium mb-1"
+                className="block text-xl text-[#620808] font-semibold mb-1"
                 style={{ fontFamily: "Inknut Antiqua" }}
               >
                 {field
@@ -180,13 +186,15 @@ function OrgEvent() {
                 name={field}
                 value={formData[field]}
                 onChange={handleChange}
-                className={`w-full p-2 border rounded ${
-                  formErrors[field] ? "border-red-500" : ""
+                className={`w-full p-3 border-2 rounded-lg shadow-sm focus:ring-2 focus:ring-[#BA7F7F] ${
+                  formErrors[field] ? "border-red-500" : "border-gray-300"
                 }`}
                 aria-invalid={!!formErrors[field]}
               />
               {formErrors[field] && (
-                <p className="text-red-500 text-sm">{formErrors[field]}</p>
+                <p className="text-red-500 text-sm mt-1 italic">
+                  {formErrors[field]}
+                </p>
               )}
             </div>
           ))}
@@ -194,7 +202,7 @@ function OrgEvent() {
         <div>
           <label
             htmlFor="datetime"
-            className="block text-lg text-[#620808] font-medium mb-1"
+            className="block text-xl text-[#620808] font-semibold mb-1"
             style={{ fontFamily: "Inknut Antiqua" }}
           >
             Event Date and Time
@@ -205,19 +213,21 @@ function OrgEvent() {
             name="datetime"
             value={formData.datetime}
             onChange={handleChange}
-            className={`w-full p-2 border rounded ${
-              formErrors.datetime ? "border-red-500" : ""
+            className={`w-full p-3 border-2 rounded-lg shadow-sm focus:ring-2 focus:ring-[#BA7F7F] ${
+              formErrors.datetime ? "border-red-500" : "border-gray-300"
             }`}
           />
           {formErrors.datetime && (
-            <p className="text-red-500 text-sm">{formErrors.datetime}</p>
+            <p className="text-red-500 text-sm mt-1 italic">
+              {formErrors.datetime}
+            </p>
           )}
         </div>
 
         <div>
           <label
             htmlFor="category"
-            className="block text-lg text-[#620808] font-medium mb-1"
+            className="block text-xl text-[#620808] font-semibold mb-1"
             style={{ fontFamily: "Inknut Antiqua" }}
           >
             Event Category
@@ -227,7 +237,7 @@ function OrgEvent() {
             name="category"
             value={formData.category}
             onChange={handleChange}
-            className="w-full p-2 border rounded"
+            className="w-full p-3 border-2 rounded-lg shadow-sm focus:ring-2 focus:ring-[#BA7F7F]"
           >
             {CATEGORIES.map((cat) => (
               <option key={cat}>{cat}</option>
@@ -238,7 +248,7 @@ function OrgEvent() {
         <div>
           <label
             htmlFor="capacity"
-            className="block text-lg text-[#620808] font-medium mb-1"
+            className="block text-xl text-[#620808] font-semibold mb-1"
             style={{ fontFamily: "Inknut Antiqua" }}
           >
             Max Attendees
@@ -250,20 +260,22 @@ function OrgEvent() {
             min="1"
             value={formData.capacity}
             onChange={handleChange}
-            className={`w-full p-2 border rounded ${
-              formErrors.capacity ? "border-red-500" : ""
+            className={`w-full p-3 border-2 rounded-lg shadow-sm focus:ring-2 focus:ring-[#BA7F7F] ${
+              formErrors.capacity ? "border-red-500" : "border-gray-300"
             }`}
           />
           {formErrors.capacity && (
-            <p className="text-red-500 text-sm">{formErrors.capacity}</p>
+            <p className="text-red-500 text-sm mt-1 italic">
+              {formErrors.capacity}
+            </p>
           )}
         </div>
 
         <button
           type="submit"
-          className="w-full bg-[#BA7F7F] text-white py-3 rounded hover:bg-[#a16767]"
+          className="w-full bg-[#BA7F7F] hover:bg-[#9f5a5a] text-white py-3 rounded-xl text-lg font-semibold tracking-wide transition shadow-lg"
         >
-          Publish
+          🚀 Publish Event
         </button>
       </form>
     </div>

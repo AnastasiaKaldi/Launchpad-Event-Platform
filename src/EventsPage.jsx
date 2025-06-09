@@ -125,7 +125,7 @@ const EventsPage = () => {
               whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 300 }}
               onClick={() => toggleCategory(option.label)}
-              className={`flex flex-col items-center justify-center w-28 h-28 rounded-full border-2 transition duration-200 shadow text-center text-sm font-medium ${
+              className={`flex flex-col items-center justify-center w-28 h-28 rounded-full border-2 transition duration-200 text-center text-sm font-medium shadow-md ${
                 selectedCategories.has(option.label)
                   ? "bg-[#620808] text-[#dbd5c5]"
                   : "bg-[#dbd5c5] text-[#620808] hover:bg-[#620808] hover:text-[#dbd5c5]"
@@ -147,7 +147,7 @@ const EventsPage = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={clearFilters}
-              className="px-4 py-2 border-2 border-[#620808] text-[#620808] rounded-full transition hover:bg-[#620808] hover:text-[#dbd5c5]"
+              className="px-4 py-2 border-2 border-[#620808] text-[#620808] rounded-full transition hover:bg-[#620808] hover:text-[#dbd5c5] shadow-md"
               style={{ fontFamily: "Inknut Antiqua" }}
             >
               Show All
@@ -167,55 +167,62 @@ const EventsPage = () => {
         <motion.h3
           initial={{ opacity: 0, x: -40 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-lg font-bold text-[#620808] mb-8 text-left"
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="text-xl font-semibold text-[#620808] mb-12 text-left"
           style={{ fontFamily: "Inknut Antiqua" }}
         >
-          Find your favourite events
+          Discover experiences that match your vibe.
         </motion.h3>
 
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {filteredEvents.map((event, index) => (
             <motion.article
               key={index}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-              className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition duration-300 flex flex-col"
+              transition={{
+                duration: 0.6,
+                ease: "easeOut",
+                delay: index * 0.05,
+              }}
+              className="bg-white/60 backdrop-blur-lg rounded-2xl overflow-hidden border border-[#620808]/20 shadow-xl hover:shadow-2xl hover:border-[#620808]/40 transition duration-300 flex flex-col"
             >
-              <img
-                src={event.image_url}
-                alt={event.title}
-                className="w-full h-40 object-cover"
-              />
-              <div className="p-4 flex flex-col gap-2">
-                <span className="text-sm text-gray-500">
+              <div className="relative group overflow-hidden">
+                <img
+                  src={event.image_url}
+                  alt={event.title}
+                  className="w-full h-48 object-cover transform transition duration-300 group-hover:scale-105"
+                />
+                <div className="absolute top-2 right-2 bg-[#620808]/80 text-[#dbd5c5] px-2 py-1 text-xs rounded shadow-sm">
                   {new Date(event.date).toLocaleDateString()}
-                </span>
+                </div>
+              </div>
+
+              <div className="p-5 flex flex-col gap-2 text-left">
                 <h2
-                  className="text-lg font-bold text-[#620808]"
+                  className="text-xl font-bold text-[#620808] leading-tight"
                   style={{ fontFamily: "Inknut Antiqua" }}
                 >
                   {event.title}
                 </h2>
                 <p
-                  className="text-gray-700 text-sm"
+                  className="text-[#2d2d2d] text-sm line-clamp-3"
                   style={{ fontFamily: "Inknut Antiqua" }}
                 >
                   {event.description}
                 </p>
-                <span className="text-xs text-gray-400 italic">
+                <span className="text-xs text-[#620808]/70 italic">
                   Category: {event.category}
                 </span>
                 <a
                   href={event.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-auto text-rose-500 hover:text-rose-600 text-sm font-semibold"
+                  className="mt-2 inline-block self-start text-rose-600 hover:text-rose-700 text-sm font-semibold transition"
                   style={{ fontFamily: "Inknut Antiqua" }}
                 >
-                  Read more
+                  View Details →
                 </a>
               </div>
             </motion.article>

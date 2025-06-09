@@ -12,9 +12,13 @@ function ManageEvents() {
   const API = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+
     axios
       .get(`${API}/api/events/mine`, {
-        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       })
       .then((res) => setEvents(res.data))
       .catch((err) => console.error("Error fetching events:", err));
@@ -30,7 +34,9 @@ function ManageEvents() {
 
     try {
       await axios.delete(`${API}/api/events/${eventId}`, {
-        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
 
       setEvents((prev) => prev.filter((e) => e.id !== eventId));

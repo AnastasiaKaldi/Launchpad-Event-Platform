@@ -16,8 +16,11 @@ function Event() {
 
   const loadEvent = async () => {
     try {
+      const token = localStorage.getItem("token");
       const res = await axios.get(`${API}/api/events/${id}`, {
-        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
       setEvent(res.data);
       setIsAuthenticated(true);
@@ -37,10 +40,16 @@ function Event() {
       setJoinLoading(true);
       setJoinMessage("");
 
+      const token = localStorage.getItem("token");
+
       const res = await axios.post(
         `${API}/api/events/${id}/join`,
         {},
-        { withCredentials: true }
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
       setJoined(true);

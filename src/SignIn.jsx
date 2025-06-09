@@ -51,7 +51,7 @@ function SignIn() {
             class="border-b-4 border-b-[#620808] pt-12 pb-2 text-4xl font-bold text-[#620808]"
             style={{ fontFamily: "Inknut Antiqua" }}
           >
-            Eventure
+            Eventino
           </a>
         </div>
         <div class="my-auto flex flex-col justify-center px-6 pt-8 sm:px-24 md:justify-start md:px-8 md:pt-0 lg:px-12">
@@ -59,7 +59,7 @@ function SignIn() {
             class="text-center text-3xl font-bold text-[#dbd5c5]"
             style={{ fontFamily: "Inknut Antiqua" }}
           >
-            Welcome back
+            Welcome!
           </p>
           <p
             class="mt-2 text-2xl text-center text-[#dbd5c5]"

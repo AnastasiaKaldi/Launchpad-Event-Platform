@@ -9,8 +9,14 @@ function JoinedEvents() {
   const API = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+
     axios
-      .get(`${API}/api/events/joined`, { withCredentials: true })
+      .get(`${API}/api/events/joined`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((res) => setEvents(res.data))
       .catch((err) => console.error("Error fetching joined events:", err));
   }, []);
@@ -22,13 +28,18 @@ function JoinedEvents() {
     if (!confirmLeave) return;
 
     try {
+      const token = localStorage.getItem("token");
+
       await axios.post(
         `${API}/api/events/${eventId}/leave`,
         {},
         {
-          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
+
       setEvents((prev) => prev.filter((e) => e.id !== eventId));
     } catch (err) {
       console.error("Failed to leave event:", err);

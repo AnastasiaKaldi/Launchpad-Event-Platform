@@ -17,6 +17,8 @@ import EditEvent from "./EditEvent.jsx";
 import Support from "./Support";
 import Privacy from "./Privacy";
 import Terms from "./Terms";
+import VerifyEmail from "./VerifyEmail.jsx";
+import ResendVerification from "./ResendVerification.jsx";
 
 import "./index.css";
 
@@ -40,6 +42,8 @@ const router = createBrowserRouter([
       { path: "support", element: <Support /> },
       { path: "privacy", element: <Privacy /> },
       { path: "terms", element: <Terms /> },
+      { path: "verify", element: <VerifyEmail /> },
+      { path: "resend-verification", element: <ResendVerification /> },
     ],
   },
 ]);

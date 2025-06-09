@@ -1,6 +1,7 @@
 import signup from "../src/assets/SignUp.jpg";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import axios from "axios";
 
 function SignUp() {
   const [firstName, setFirstName] = useState("");
@@ -12,33 +13,40 @@ function SignUp() {
     e.preventDefault();
 
     try {
-      const res = await fetch(
+      const res = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/auth/register`,
         {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            first_name: firstName,
-            last_name: lastName,
-            email,
-            password,
-            role: "user",
-          }),
+          first_name: firstName,
+          last_name: lastName,
+          email,
+          password,
+          role: "user",
         }
       );
 
-      const data = await res.json();
+      if (res.status === 201) {
+        await axios.post(
+          `${import.meta.env.VITE_API_URL}/api/send-verification-email`,
+          { email }
+        );
 
-      if (res.ok) {
-        alert("Registration successful! You can now log in.");
+        alert(
+          "Registration successful! Please check your email to verify your account."
+        );
       } else {
-        alert(data.message || "Registration failed");
+        alert(res.data.message || "Registration failed");
       }
     } catch (err) {
       console.error("Registration error:", err);
-      alert("Server error");
+      if (
+        err.response &&
+        err.response.data &&
+        err.response.data.message === "User already exists"
+      ) {
+        alert("A user with this email already exists.");
+      } else {
+        alert("Server error. Please try again.");
+      }
     }
   };
 
@@ -52,7 +60,7 @@ function SignUp() {
             className="border-b-4 border-b-[#620808] pt-12 pb-2 text-4xl font-bold text-[#620808]"
             style={{ fontFamily: "Inknut Antiqua" }}
           >
-            Eventure
+            Eventino
           </a>
         </div>
 
