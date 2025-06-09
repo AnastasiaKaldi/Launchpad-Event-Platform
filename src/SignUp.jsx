@@ -21,6 +21,7 @@ function SignUp() {
           email,
           password,
           role: "user",
+          is_verified: true,
         }
       );
 
