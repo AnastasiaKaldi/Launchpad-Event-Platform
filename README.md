@@ -30,6 +30,8 @@ This is the React + Vite frontend for Eventino, an event management platform tha
 
 -- React Router DOM for routing
 
+-- Email Confirmation for Users
+
 ## Installation
 
 git clone https://github.com/AnastasiaKaldi/Launchpad-Event-Platform.git
@@ -54,6 +56,8 @@ Description
 
 npm run dev
 
+mpn install
+
 Start dev server
 
 npm run build
@@ -68,4 +72,12 @@ Preview production build
 
 Staff: Can create, edit, delete events; see progress stats.
 
+Staff email: staff@example.com
+
+Staff password: staff123
+
 Users: Can browse and join events.
+
+User email: user@example.com
+
+User password: user123

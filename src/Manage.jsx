@@ -15,10 +15,8 @@ function ManageEvents() {
     const token = localStorage.getItem("token");
 
     axios
-      .get(`${API}/api/events/mine`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      .get(`${API}/api/events/joined`, {
+        headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => setEvents(res.data))
       .catch((err) => console.error("Error fetching events:", err));
